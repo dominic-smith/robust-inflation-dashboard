@@ -20,10 +20,13 @@ https://dominic-smith.com/robust-inflation-dashboard/
 
 ## Tabs
 
-- **Latest reading** — the four measures now (headline PCE, core PCE, median PCE, trimmed mean), value cards + 12-month trend.
+- **Latest reading** — the four measures now (headline PCE, core PCE, median PCE, trimmed mean), value cards + trend.
 - **The range** — the disagreement band across the robust measures over time, with summary spreads by inflation regime.
-- **Distribution** — the latest month's category price changes weighted by spending, showing what the trimmed mean discards.
-- **Download & methods** — the full monthly series as CSV, plus method notes.
+- **Distribution** — the latest month's category price changes weighted by spending, showing (and listing by name) what the trimmed mean discards.
+- **Robustness** — interactive trim-grid RMSE heatmap (α×β) with trend-measure / sample / category selectors and a reference-measure RMSE table. Analytical layer from the paper's prediction analysis (paper vintage), not the live monthly series.
+- **Download & methods** — the monthly series as CSV, plus method notes.
+
+A global **horizon lever** (1-month / 3-month annualized / 12-month) drives the three live-series tabs.
 
 ## Monthly update
 
@@ -47,7 +50,10 @@ compute/                self-contained measure pipeline (reuses the paper's R co
     1_cleaning/ 2_analysis/   01m load, 02m grouping, 10m relatives, 21m median, 22m combine
     download_bea.R      fetch the current BEA underlying detail
     run_compute.R       01m -> 22m, pruned to the four dashboard measures
-    export_artifacts.R  write app/data/ from the computed series
+    export_artifacts.R  write horizon-aware app/data/ from the computed series
+  analytical/
+    extract_heatmap.R   ONE-TIME/ANNUAL: extract the trim-grid RMSE surfaces from
+                        the paper's prediction outputs (NOT part of refresh.sh)
   data/1_raw/           static author-classification inputs (BEA workbook is downloaded)
 build.R                 shinylive::export("app", "docs")
 refresh.sh              one-command monthly refresh
@@ -55,8 +61,9 @@ docs/                   generated static site (served by GitHub Pages)
 ```
 
 The 51×51 optimal-trim grid, prediction/RMSE analysis, and heatmaps from the paper
-are the *analytical layer* (a paper result, not monthly data) and are intentionally
-**not** run here. They are the basis for a planned robustness-explorer tab.
+are the *analytical layer* (a paper result, not monthly data). They power the
+**Robustness** tab and are refreshed only by re-running `compute/analytical/extract_heatmap.R`
+against the paper repo (annually), never by the monthly `refresh.sh`.
 
 ## Local development
 
