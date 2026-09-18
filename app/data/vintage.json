@@ -1,8 +1,7 @@
 {
   "vintage_date": "2026-07-01",
   "vintage_label": "July 2026",
-  "dist_label": "July 2026",
-  "refreshed_at": "2026-09-17T20:39:37-0400",
+  "refreshed_at": "2026-09-17T21:42:02-0400",
   "source": "BEA underlying PCE detail (current vintage), author computation",
   "n_categories": 176
 }
