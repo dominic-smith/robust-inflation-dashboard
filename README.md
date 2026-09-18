@@ -6,53 +6,72 @@ Measures of Inflation."*
 
 It is a **static [shinylive](https://posit-dev.github.io/r-shinylive/) app**: the
 Shiny app is compiled to WebAssembly and runs entirely in the visitor's browser,
-served for free from GitHub Pages. There is no server to run or maintain, and no
-usage limits. All data is precomputed — the app only reads small files shipped in
-`app/data/`.
+served for free from GitHub Pages. No server, no maintenance, no usage limits.
+
+**This repository is fully self-contained.** It downloads the current BEA
+underlying-PCE vintage and recomputes the measures itself — it reads nothing from
+the (frozen) paper/R&R repository. Because BEA revises history, numbers here
+reflect the current vintage and differ slightly from the published paper; this is
+a living companion to the paper, not its archival record.
 
 ## Live site
 
-`https://dominic-smith.github.io/robust-inflation-dashboard/` *(enable in
-Settings → Pages → Deploy from branch → `main` / `docs`)*
+https://dominic-smith.com/robust-inflation-dashboard/
+
+## Tabs
+
+- **Latest reading** — the four measures now (headline PCE, core PCE, median PCE, trimmed mean), value cards + 12-month trend.
+- **The range** — the disagreement band across the robust measures over time, with summary spreads by inflation regime.
+- **Distribution** — the latest month's category price changes weighted by spending, showing what the trimmed mean discards.
+- **Download & methods** — the full monthly series as CSV, plus method notes.
+
+## Monthly update
+
+```bash
+./refresh.sh                    # download BEA -> compute -> export -> rebuild
+git add -A && git commit -m "Update: $(date +%Y-%m)" && git push
+```
+
+GitHub Pages redeploys automatically on push.
 
 ## Repository layout
 
 ```
-app/
-  app.R                 # the Shiny app (UI + server)
-  R/theme_dashboard.R   # shared palette + ggplot theme
-  data/
-    latest_series.csv   # precomputed headline series (tidy long)
-    vintage.json        # data vintage + source note
-build.R                 # shinylive::export("app", "docs")
-docs/                   # generated static site (served by GitHub Pages)
+app/                    the Shiny app (compiled to docs/ by build.R)
+  app.R
+  R/theme_dashboard.R
+  data/                 precomputed artifacts the app reads (small CSVs + vintage.json)
+compute/                self-contained measure pipeline (reuses the paper's R code)
+  code/
+    ado/                pipeline helpers (Stata-compatible semantics, trim engine)
+    1_cleaning/ 2_analysis/   01m load, 02m grouping, 10m relatives, 21m median, 22m combine
+    download_bea.R      fetch the current BEA underlying detail
+    run_compute.R       01m -> 22m, pruned to the four dashboard measures
+    export_artifacts.R  write app/data/ from the computed series
+  data/1_raw/           static author-classification inputs (BEA workbook is downloaded)
+build.R                 shinylive::export("app", "docs")
+refresh.sh              one-command monthly refresh
+docs/                   generated static site (served by GitHub Pages)
 ```
 
-The data-generating pipeline lives in a **separate private repo**
-(`ExtendingTheRange_IJCB`). That repo's `code/refresh_dashboard.R` recomputes the
-artifacts in `app/data/` and copies them here. This repo never contains raw data
-or the estimation code.
+The 51×51 optimal-trim grid, prediction/RMSE analysis, and heatmaps from the paper
+are the *analytical layer* (a paper result, not monthly data) and are intentionally
+**not** run here. They are the basis for a planned robustness-explorer tab.
 
-## Monthly update
-
-1. In the pipeline repo: drop the new BEA underlying-PCE vintage into
-   `data/1_raw/`, run the live pipeline subset, then
-   `Rscript code/refresh_dashboard.R` (writes into this repo's `app/data/`).
-2. Here: `Rscript build.R`
-3. `git add -A && git commit -m "Update: <month>" && git push`
-
-GitHub Pages redeploys automatically on push.
-
-## Local preview
+## Local development
 
 ```r
-# from the repo root
-shiny::runApp("app")     # runs the app natively (fast dev loop)
-Rscript build.R          # produces the static site in docs/
+shiny::runApp("app")     # native, fast dev loop (no WebAssembly)
+Rscript build.R          # produce the static site in docs/
 ```
 
-## Status
+## Data provenance
 
-Phase 1 — "Latest reading" tab (headline PCE, core PCE, Cleveland median, Dallas
-trimmed mean). Planned: the range of equivalent trims, latest-month price-change
-distribution, and the interactive robustness (trim-grid RMSE) explorer.
+- **Headline & core PCE** — BEA aggregate price indexes (12-month change).
+- **Median PCE & trimmed mean** — computed from the ~180 detailed PCE categories
+  using the paper's methodology (weight each category's price change by spending
+  share; take the weighted middle, or trim the weighted tails and average).
+
+Validated against the paper: at the Feb-2024 overlap the recomputed series match
+the published series to ~0.005 pp on average (residual differences are BEA data
+revisions), and the recomputed trimmed mean tracks the official Dallas Fed series.

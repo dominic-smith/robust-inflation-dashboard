@@ -1,8 +1,9 @@
 {
-  "vintage_date": "2024-02-01",
-  "vintage_label": "February 2024",
-  "refreshed_at": "2026-09-17T16:24:02-0400",
-  "source": "BEA underlying PCE detail; Dallas Fed trimmed mean; Cleveland Fed median",
-  "n_measures": 4
+  "vintage_date": "2026-07-01",
+  "vintage_label": "July 2026",
+  "dist_label": "July 2026",
+  "refreshed_at": "2026-09-17T20:39:37-0400",
+  "source": "BEA underlying PCE detail (current vintage), author computation",
+  "n_categories": 176
 }
 

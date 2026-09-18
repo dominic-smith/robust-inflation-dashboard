@@ -3,3 +3,13 @@
 .RData
 .Rproj.user/
 *.Rproj
+
+# Compute pipeline: generated + downloaded data is reproducible, not tracked.
+# The BEA workbook is downloaded by download_bea.R; the .rds/.tex are built by
+# run_compute.R. Only the small static author-classification inputs are kept.
+compute/data/1_raw/Section2All_xls.xlsx
+compute/data/1_raw/*.rds
+compute/data/2_processed/
+compute/data/3_done/
+compute/data/temp/
+compute/code/figures/
