@@ -103,7 +103,7 @@ ui <- navbarPage(
         radioButtons("hm_group", "Categories", choices = setNames(names(GROUP_LABELS), GROUP_LABELS), selected = "4"),
         br(), tableOutput("hm_refs")),
       mainPanel(width = 9, plotOutput("heatmap", height = "560px"))),
-    div(class = "foot", "Analytical layer from the paper's out-of-sample prediction analysis (fixed at the paper's data vintage), not the live monthly series. RMSE = root mean squared error vs the trend measure.")
+    div(class = "foot", "From the paper's evaluation of every trim against each trend measure over the chosen sample (fixed at the paper's data vintage), not the live monthly series. RMSE = root mean squared error vs the trend measure.")
   )),
 
   tabPanel("Download & methods", fluidPage(

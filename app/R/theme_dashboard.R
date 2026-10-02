@@ -15,9 +15,10 @@ MEASURE_COLORS <- c(
 # Label maps shared across tabs
 HORIZON_LEVELS <- c("1m", "3m", "12m")
 HORIZON_LABELS <- c(`1m` = "1-month", `3m` = "3-month", `12m` = "12-month")
-TARGET_LABELS <- c(c_0_37 = "Current trend", f_0_24 = "Future inflation (0–24m)",
-                   f_12_24 = "Future inflation (12–24m)", b_2_39 = "Past average (2–39m)")
-SAMPLE_LABELS <- c(long = "Full sample", `80s` = "1980s onward", `00s` = "2000s onward")
+# Trend targets and samples, named as in the paper (Sections 3-4)
+TARGET_LABELS <- c(c_0_37 = "Current trend (centered)", f_12_24 = "Future trend (12–24m ahead)",
+                   f_0_24 = "Forward trend (0–24m)", b_2_39 = "Band-pass trend (2–39m)")
+SAMPLE_LABELS <- c(long = "1970–2024", `80s` = "1970–1989", `00s` = "2000–2024")
 GROUP_LABELS  <- c(`4` = "All categories", `5` = "Excluding housing")
 
 theme_rrm <- function(base_size = 14) {
