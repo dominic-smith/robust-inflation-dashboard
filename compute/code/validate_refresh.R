@@ -9,7 +9,7 @@
 
 suppressPackageStartupMessages({library(dplyr); library(readr)})
 
-s <- read_csv("../../app/data/series_h.csv", show_col_types = FALSE) |> filter(horizon == "12m")
+s <- read_csv("../../artifacts/series_h.csv", show_col_types = FALSE) |> filter(horizon == "12m")
 fred <- function(id, tries = 3) {
   url <- sprintf("https://fred.stlouisfed.org/graph/fredgraph.csv?id=%s", id)
   tmp <- tempfile(fileext = ".csv")
@@ -53,7 +53,7 @@ if (g > 0.2) warning("Trimmed-mean gap to official Dallas is unusually large —
 last2 <- sort(unique(s$date), decreasing = TRUE)[2:1]
 tab <- s |> filter(date %in% last2) |> mutate(m = format(date, "%b %Y")) |>
   select(measure, m, value) |> tidyr::pivot_wider(names_from = m, values_from = value)
-band <- read_csv("../../app/data/best_trims_band.csv", show_col_types = FALSE) |>
+band <- read_csv("../../artifacts/best_trims_band.csv", show_col_types = FALSE) |>
   filter(target == "c_0_37", sample == "long") |> filter(date == max(date))
 message("\nLatest 12-month readings:"); print(as.data.frame(tab), digits = 3, row.names = FALSE)
 message(sprintf("Best-trims range (current trend, 1970-2024 set), %s: %.2f-%.2f%%, set mean %.2f%%",

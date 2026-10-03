@@ -14,8 +14,8 @@ echo "== 1/5  download latest BEA underlying PCE detail =="
 echo "== 2/5  compute measures (01m -> 22m) =="
 ( cd compute/code && Rscript run_compute.R )
 
-echo "== 3/5  export app artifacts =="
-( cd compute/code && Rscript export_artifacts.R )
+echo "== 3/5  export artifacts (CSV) + pack app data =="
+( cd compute/code && Rscript export_artifacts.R && Rscript pack_app_data.R )
 
 echo "== 4/5  validate (FRED match, category alignment, Dallas gap) =="
 ( cd compute/code && Rscript validate_refresh.R )

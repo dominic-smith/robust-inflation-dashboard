@@ -1,36 +1,35 @@
 # Robust Measures of Inflation — public dashboard ---------------------------
 # Static shinylive app. Monthly measures precomputed by compute/ (BEA -> series),
 # the robustness explorer from the paper's prediction analysis (paper vintage).
-# Tabs: Latest reading, The range, Distribution, Robustness, Download.
+# All data arrives as one compressed file (app/data/dashboard.rds, built by
+# compute/code/pack_app_data.R). Package list kept short on purpose: every package
+# here is downloaded into the visitor's browser on first load.
 
 library(shiny)
 library(ggplot2)
 library(dplyr)
-library(tidyr)
-library(readr)
 
 source("R/theme_dashboard.R")
 
 # --- data ------------------------------------------------------------------
-series_h <- read_csv("data/series_h.csv", show_col_types = FALSE) |>
+D <- readRDS("data/dashboard.rds")
+series_h <- D$series_h |>
   mutate(measure = factor(measure, levels = MEASURE_LEVELS),
          horizon = factor(horizon, levels = HORIZON_LEVELS))
-distribution_h <- read_csv("data/distribution_h.csv", show_col_types = FALSE) |>
-  mutate(category = trimws(category))
-heat <- read_csv("data/heatmap_rmse.csv", show_col_types = FALSE,
-                 col_types = "ccciid")
-heat_refs <- read_csv("data/heatmap_refs.csv", show_col_types = FALSE)
-heat_dm <- read_csv("data/heatmap_dm.csv", show_col_types = FALSE, col_types = "cciid")
-band <- read_csv("data/best_trims_band.csv", show_col_types = FALSE)
+distribution_h <- D$distribution_h
+heat <- D$heat; heat_refs <- D$heat_refs; heat_dm <- D$heat_dm
+band <- D$band; pct_h <- D$pct_h
+VINTAGE_LABEL <- D$vintage$vintage_label
+SOURCE_NOTE   <- D$vintage$source
 
-grabj <- function(file, key, default = "") {
-  ln <- readLines(file, warn = FALSE)
-  m <- regmatches(ln, regexpr(sprintf('"%s"\\s*:\\s*"[^"]*"', key), ln))
-  if (length(m) == 0) return(default)
-  sub(sprintf('.*"%s"\\s*:\\s*"([^"]*)".*', key), "\\1", m[[1]])
+# long (date, measure, value) -> wide (Month + one column per measure), base R
+widen <- function(d) {
+  d <- d[order(d$date), ]; dates <- unique(d$date)
+  out <- data.frame(Month = dates)
+  for (m in intersect(MEASURE_LEVELS, unique(as.character(d$measure))))
+    out[[m]] <- d$value[d$measure == m][match(dates, d$date[d$measure == m])]
+  out
 }
-VINTAGE_LABEL <- grabj("data/vintage.json", "vintage_label", "latest")
-SOURCE_NOTE   <- grabj("data/vintage.json", "source", "")
 
 pct <- function(x) sprintf("%.1f%%", x)
 cutoff_for <- function(d, yrs) if (yrs <= 0) min(d) else seq(max(d), length.out = 2, by = sprintf("-%d years", yrs))[2]
@@ -109,7 +108,12 @@ ui <- navbarPage(
     p(class = "lead", "The categories in the trimmed tails this month, largest weight first."),
     fluidRow(column(6, h5("Cheapest (low tail)"), tableOutput("disc_low")),
              column(6, h5("Most expensive (high tail)"), tableOutput("disc_high"))),
-    div(class = "foot", "Grey bars / listed categories are what the trimmed mean removes: the lightest 24% and heaviest 31% of spending weight.")
+    div(class = "foot", "Grey bars / listed categories are what the trimmed mean removes: the lightest 24% and heaviest 31% of spending weight."),
+    h4("The spread of price changes over time"),
+    p(class = "lead", "Percentiles of category price changes each month, weighted by spending (the paper's Figure 2). The shaded 24th\u201369th band is the slice the trimmed mean averages; the 50th percentile is the median. Follows the horizon setting above."),
+    radioButtons("pct_window", NULL, inline = TRUE,
+      c("Last 10 years" = "10", "Since 1990" = "1990", "Full history (1960\u2013)" = "0"), selected = "10"),
+    plotOutput("pctplot", height = "420px")
   )),
 
   tabPanel("Robustness", fluidPage(
@@ -121,9 +125,10 @@ ui <- navbarPage(
         radioButtons("hm_sample", "Sample", choices = setNames(names(SAMPLE_LABELS), SAMPLE_LABELS), selected = "long"),
         radioButtons("hm_group", "Categories", choices = setNames(names(GROUP_LABELS), GROUP_LABELS), selected = "4"),
         radioButtons("hm_view", "Show",
-          c("Error relative to best trim" = "rmse", "Statistical equivalence (DM test)" = "dm"), selected = "rmse"),
+          c("Error relative to best trim" = "rmse", "Statistical equivalence (DM test)" = "dm",
+            "Average bias" = "bias"), selected = "rmse"),
         br(), tableOutput("hm_refs")),
-      mainPanel(width = 9, plotOutput("heatmap", height = "560px"))),
+      mainPanel(width = 9, plotOutput("heatmap", height = "560px"), uiOutput("hm_note"))),
     div(class = "foot", "From the paper's evaluation of every trim against each trend measure over the chosen sample (fixed at the paper's data vintage), not the live monthly series. RMSE = root mean squared error vs the trend measure.")
   )),
 
@@ -277,6 +282,41 @@ server <- function(input, output, session) {
       theme_rrm() + theme(legend.box = "vertical", legend.spacing.y = grid::unit(2, "pt"))
   })
 
+  # Cell-edge segments enclosing a set of (lb, beta) grid cells
+  outline_segs <- function(cells) {
+    key <- paste(cells$lb, cells$beta)
+    has <- function(a, b) paste(a, b) %in% key
+    seg <- function(k, x, xe, y, ye) if (any(k)) data.frame(x = x[k], xend = xe[k], y = y[k], yend = ye[k]) else NULL
+    l <- cells$lb; b <- cells$beta
+    rbind(seg(!has(l + 1, b), l + .5, l + .5, b - .5, b + .5), seg(!has(l - 1, b), l - .5, l - .5, b - .5, b + .5),
+          seg(!has(l, b + 1), l - .5, l + .5, b + .5, b + .5), seg(!has(l, b - 1), l - .5, l + .5, b - .5, b - .5))
+  }
+  output$hm_note <- renderUI(div(class = "foot", switch(input$hm_view,
+    rmse = "Colour: each trim's RMSE divided by the best trim's RMSE.",
+    dm   = "Colour: Diebold\u2013Mariano test p-value comparing each trim's errors with the best trim's. p \u2265 0.05 = statistically equivalent; that set defines the Best-trims range tab.",
+    bias = paste0("Colour: square root of each trim's average squared bias against the trend measure (pp); trims with bias of 0.5pp or more are left blank. ",
+                  if (input$hm_group == "4") "Outlined: trims not statistically worse than the best at the 1% level (DM p \u2265 0.01), as in the paper." else "The DM outline is available for All categories only."))))
+
+  # Paper Figure 2: percentiles of the category price-change distribution over time
+  output$pctplot <- renderPlot({
+    d <- pct_h |> filter(horizon == input$horizon)
+    co <- switch(input$pct_window, `10` = cutoff_for(d$date, 10), `1990` = as.Date("1990-01-01"), min(d$date))
+    d <- d |> filter(date >= co)
+    ln <- do.call(rbind, lapply(c("p10", "p24", "p50", "p69", "p90"),
+                                function(q) data.frame(date = d$date, q = q, value = d[[q]]))) |>
+      mutate(grp = factor(ifelse(q %in% c("p10", "p90"), "10th & 90th", ifelse(q == "p50", "50th (median)", "24th & 69th (trimmed-mean cut points)")),
+                          levels = c("10th & 90th", "24th & 69th (trimmed-mean cut points)", "50th (median)")))
+    ggplot() +
+      geom_ribbon(data = d, aes(date, ymin = p24, ymax = p69), fill = MEASURE_COLORS[["Dallas trimmed mean"]], alpha = 0.12) +
+      geom_line(data = ln, aes(date, value, color = grp, group = q), linewidth = 0.45) +
+      geom_hline(yintercept = 2, linetype = "dashed", color = "#bbbbbb") +
+      scale_color_manual(values = c("10th & 90th" = "#8DA0B3", "24th & 69th (trimmed-mean cut points)" = MEASURE_COLORS[["Dallas trimmed mean"]],
+                                    "50th (median)" = MEASURE_COLORS[["Cleveland median"]]), name = "Percentile") +
+      scale_y_continuous(labels = function(x) paste0(x, "%")) +
+      labs(y = sprintf("%s change%s", HORIZON_LABELS[[input$horizon]], if (input$horizon == "12m") "" else ", annualized")) +
+      theme_rrm() + theme(legend.box = "vertical") + guides(color = guide_legend(nrow = 2))
+  })
+
   # Tab 4 — robustness heatmap
   hm_panel <- reactive(heat |> filter(group == input$hm_group, sample == input$hm_sample, target == input$hm_target))
   output$heatmap <- renderPlot({
@@ -291,6 +331,17 @@ server <- function(input, output, session) {
       fill_layer <- list(geom_raster(aes(fill = cls)),
         scale_fill_manual(values = c("#F4F1E4", "#C6DBEF", "#6BAED6", "#08519C"), na.value = "#08519C",
                           drop = FALSE, name = "DM test vs\nbest trim"))
+    } else if (input$hm_view == "bias") {
+      d <- hm_panel(); bl <- refs$best_lb[1]; bb <- refs$best_beta[1]
+      d$fillv <- ifelse(d$bias < 0.5, d$bias, NA)           # paper shows low-bias trims only
+      fill_layer <- list(geom_raster(data = d[!is.na(d$fillv), ], aes(fill = fillv)),
+        scale_fill_gradient(low = "#008066", high = "#FFFF66", limits = c(0, 0.5), breaks = c(0, 0.25, 0.5),
+                            labels = c("0", "0.25", "0.5"), name = "Avg. bias\n(pp)"))
+      if (input$hm_group == "4") {                           # outline: DM p >= 0.01 vs best, as in the paper
+        eqc <- heat_dm |> filter(sample == input$hm_sample, target == input$hm_target, is.na(p) | p >= 0.01)
+        fill_layer <- c(fill_layer, list(geom_segment(data = outline_segs(eqc),
+          aes(x = x, y = y, xend = xend, yend = yend), inherit.aes = FALSE, color = "grey10", linewidth = 0.6)))
+      }
     } else {
       d <- hm_panel(); best <- min(d$rmse, na.rm = TRUE)
       d$rel <- pmin(d$rmse / best, 2.5)
@@ -299,7 +350,7 @@ server <- function(input, output, session) {
         scale_fill_viridis_c(option = "viridis", direction = 1, limits = c(1, 2.5),
                              breaks = c(1, 1.5, 2, 2.5), labels = c("best", "1.5×", "2×", "≥2.5×"), name = "RMSE\nvs best"))
     }
-    mcol <- if (input$hm_view == "dm") "grey15" else "white"   # visible on either background
+    mcol <- if (input$hm_view == "rmse") "white" else "grey15"   # visible on either background
     marks <- data.frame(
       lb = c(0, 24, 50, 8, bl), beta = c(0, 31, 50, 8, bb),
       label = factor(c("Headline", "Trimmed PCE", "Median", "Trimmed CPI", "Best trim"),
@@ -325,15 +376,13 @@ server <- function(input, output, session) {
 
   # Tab 5
   output$preview <- renderTable({
-    d <- sh() |> select(date, measure, value) |>
-      tidyr::pivot_wider(names_from = measure, values_from = value)
-    d |> arrange(date) |> tail(12) |> mutate(date = format(date, "%Y-%m")) |> rename(Month = date)
+    d <- tail(widen(sh()), 12); d$Month <- format(d$Month, "%Y-%m"); d
   }, digits = 2)
   output$dl <- downloadHandler(
     filename = function() sprintf("robust_inflation_%s_%s.csv", input$horizon, format(max(sh()$date), "%Y-%m")),
     content = function(file) {
-      d <- sh() |> select(date, measure, value) |> tidyr::pivot_wider(names_from = measure, values_from = value)
-      write_csv(arrange(d, date), file)
+      d <- widen(sh()); d$Month <- format(d$Month, "%Y-%m")
+      utils::write.csv(d, file, row.names = FALSE)
     })
 }
 

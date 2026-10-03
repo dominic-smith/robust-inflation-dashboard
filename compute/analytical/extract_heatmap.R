@@ -1,5 +1,5 @@
 # ONE-TIME / ANNUAL extract of the paper's analytical layer (the trim-grid RMSE
-# surfaces) into the dashboard's app/data/. This is NOT part of the monthly
+# surfaces) into the dashboard's artifacts/ (then run pack_app_data.R). NOT part of the monthly
 # refresh: the optimal-trim / prediction results are a paper finding, refreshed
 # only when the authors rerun the prediction analysis. It reads the paper repo's
 # output/ once; the committed CSVs are what the app actually uses.
@@ -7,18 +7,18 @@
 #   Rscript extract_heatmap.R ["/path/to/ExtendingTheRange_IJCB/output"]
 #
 # Produces:
-#   app/data/heatmap_rmse.csv  group, sample, target, lb, beta, rmse
-#   app/data/heatmap_refs.csv  group, sample, target, measure, rmse (+ best trim)
+#   artifacts/heatmap_rmse.csv  group, sample, target, lb, beta, rmse
+#   artifacts/heatmap_refs.csv  group, sample, target, measure, rmse (+ best trim)
 
 suppressPackageStartupMessages({library(readxl); library(readr); library(dplyr)})
 
 args <- commandArgs(trailingOnly = TRUE)
 PAPER_OUT <- if (length(args) >= 1) args[[1]] else
   "/Users/smith_d/Dropbox (Work)/Research/ExtendingTheRange_IJCB/output"
-# Run from compute/analytical/; app/data is two levels up.
-APP_DATA <- normalizePath("../../app/data", mustWork = FALSE)
+# Run from compute/analytical/; artifacts/ is two levels up.
+APP_DATA <- normalizePath("../../artifacts", mustWork = FALSE)
 if (!dir.exists(APP_DATA))
-  APP_DATA <- normalizePath("~/Developer/robust-inflation-dashboard/app/data")
+  APP_DATA <- normalizePath("~/Developer/robust-inflation-dashboard/artifacts")
 
 groups  <- c("4", "5")
 samples <- c("long", "80s", "00s")
@@ -31,12 +31,18 @@ for (g in groups) for (s in samples) {
   Data <- read_excel(file.path(PAPER_OUT, g, sprintf("d28m_%s_1_DAL_1.xlsx", s)))
   Ref  <- read_excel(file.path(PAPER_OUT, g, sprintf("d28m_%s_1_DALagg_1.xlsx", s)))
   Data$beta <- 100 - Data$ub                       # upper trim beta (matches paper)
+  # Bias component (paper Figure "Prediction Bias and Near-Optimal Trims"):
+  # sqrt of each trim's average squared bias vs the trend measure, same (lb, ub) grid
+  Bias <- read_excel(file.path(PAPER_OUT, g, sprintf("d28m_bias_%s_1_DAL_1.xlsx", s)))
+  Bias <- Bias[match(paste(Data$lb, Data$ub), paste(Bias$lb, Bias$ub)), ]
+  stopifnot(!anyNA(Bias$lb))
   for (o in targets) {
     rmse <- sqrt(Data[[paste0("mean_p_", o)]])
     best <- which.min(rmse)
     grid_rows[[length(grid_rows) + 1]] <- data.frame(
       group = g, sample = s, target = o,
-      lb = Data$lb, beta = Data$beta, rmse = rmse)
+      lb = Data$lb, beta = Data$beta, rmse = rmse,
+      bias = sqrt(Bias[[paste0("bias_p_", o)]]))
     rref <- sqrt(Ref[[paste0("mean_p_", o)]])
     ref_rows[[length(ref_rows) + 1]] <- data.frame(
       group = g, sample = s, target = o,

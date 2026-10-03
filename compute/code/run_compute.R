@@ -26,6 +26,9 @@ run <- function(path) {
 run("1_cleaning/01m-load_data.R")
 run("1_cleaning/02m-clean_pce.R")
 run("2_analysis/10m-create_relatives.R")
+# 3-month relatives for the Dallas set (paper builds DAL at lags 1 and 12 only);
+# needed for the Figure 2 percentiles on the 3-month horizon
+create_relatives(freq = "M", group = "DAL", lag = 3)
 
 # Batch 2 (pruned): only the two trims the dashboard uses, applied directly.
 #   median_pce  = 50/50 Passche-weighted trim on the Cleveland category set
@@ -36,6 +39,9 @@ trimmed_mean_single("CLE", "M", 1, "pas", 50, 50)
 
 # Batch 2 cont.: chained monthly median (fills any dates the 50/50 trim misses)
 run("2_analysis/21m-median_pce.R")
+
+# Paper Figure 2: weighted percentiles of category price changes (DAL set)
+run("2_analysis/24m-percentiles.R")
 
 # Batch 3: combine into the aggregate time series (d22m_agg_time_series[_1])
 run("2_analysis/22m-combine_measures.R")

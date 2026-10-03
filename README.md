@@ -23,8 +23,8 @@ https://dominic-smith.com/robust-inflation-dashboard/
 - **Latest reading** — the four measures now (headline PCE, core PCE, median PCE, trimmed mean), value cards + trend.
 - **Best-trims range** — the paper's Figure 1, live: the band of 12-month inflation produced by every trim statistically equivalent to the best (DM test, 5%), with the set mean and the headline/median/trimmed-mean lines. Which trims are equivalent is a paper result; the trims themselves are recomputed on each month's data.
 - **Measure disagreement** — the spread across core, median, and trimmed mean over time, with summary spreads by inflation regime.
-- **Distribution** — the latest month's category price changes weighted by spending, showing (and listing by name) what the trimmed mean discards.
-- **Robustness** — interactive trim-grid heatmap (α×β): RMSE relative to the best trim, or DM-test equivalence with the best trim; trend-measure / sample / category selectors and a reference-measure RMSE table. Paper vintage, not the live monthly series.
+- **Distribution** — the latest month's category price changes weighted by spending, showing (and listing by name) what the trimmed mean discards; plus the paper's Figure 2, the 10/24/50/69/90th percentiles of category price changes over time.
+- **Robustness** — interactive trim-grid heatmap (α×β): RMSE relative to the best trim, DM-test equivalence with the best trim, or average bias (with the paper's DM p ≥ 0.01 outline); trend-measure / sample / category selectors and a reference-measure RMSE table. Paper vintage, not the live monthly series.
 - **Download & methods** — the monthly series as CSV, plus method notes.
 
 A global **horizon lever** (1-month / 3-month annualized / 12-month) drives Latest reading, Measure disagreement, and Distribution.
@@ -44,7 +44,8 @@ GitHub Pages redeploys automatically on push.
 app/                    the Shiny app (compiled to docs/ by build.R)
   app.R
   R/theme_dashboard.R
-  data/                 precomputed artifacts the app reads (small CSVs + vintage.json)
+  data/dashboard.rds    the only data the app reads: all tables packed into one compressed file
+artifacts/              human-readable CSVs of everything the app shows (committed, not shipped to the browser)
 compute/                self-contained measure pipeline (reuses the paper's R code)
   code/
     ado/                pipeline helpers (Stata-compatible semantics, trim engine)
@@ -52,7 +53,9 @@ compute/                self-contained measure pipeline (reuses the paper's R co
     download_bea.R      fetch the current BEA underlying detail
     run_compute.R       01m -> 22m, pruned to the four dashboard measures, + best-trims band
     best_trims_band.R   apply the paper's equivalent-trim sets to the current data
-    export_artifacts.R  write horizon-aware app/data/ from the computed series
+    export_artifacts.R  write horizon-aware CSVs to artifacts/
+    pack_app_data.R     pack artifacts/ into app/data/dashboard.rds
+    validate_refresh.R  pre-push checks (FRED match, BEA line alignment, Dallas gap)
   analytical/
     extract_heatmap.R   ONE-TIME/ANNUAL: extract the trim-grid RMSE surfaces, DM
                         p-values, and equivalent-trim sets from the paper's outputs
@@ -67,7 +70,14 @@ docs/                   generated static site (served by GitHub Pages)
 The 51×51 optimal-trim grid, prediction/RMSE analysis, and heatmaps from the paper
 are the *analytical layer* (a paper result, not monthly data). They power the
 **Robustness** tab and are refreshed only by re-running `compute/analytical/extract_heatmap.R`
-against the paper repo (annually), never by the monthly `refresh.sh`.
+against the paper repo (annually, then `pack_app_data.R`), never by the monthly `refresh.sh`.
+
+## Load time
+
+The app runs R in the visitor's browser (WebAssembly), so a first visit downloads the
+R runtime (~36 MB) plus every R package the app loads. Keep `app/app.R` to
+`shiny`, `ggplot2`, `dplyr` and base R: adding `tidyr` alone pulls in `stringi` (13 MB).
+Repeat visits reuse the browser cache.
 
 ## Local development
 

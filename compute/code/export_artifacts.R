@@ -1,6 +1,6 @@
-# Export dashboard artifacts from the computed pipeline outputs into app/data/.
+# Export dashboard artifacts from the computed pipeline outputs into artifacts/ (CSV).
 # Run with the working directory at compute/code/ (after run_compute.R).
-# Writes only into ../../app/data.
+# Writes only into ../../artifacts; pack_app_data.R then builds app/data/dashboard.rds.
 #
 # Produces horizon-aware series (1m / 3m annualized, 12m) by building a monthly
 # price index for each measure and letting the app derive any horizon; plus the
@@ -9,7 +9,7 @@
 
 suppressPackageStartupMessages({library(dplyr); library(tidyr); library(readr)})
 
-APP_DATA <- normalizePath("../../app/data", mustWork = FALSE)
+APP_DATA <- normalizePath("../../artifacts", mustWork = FALSE)
 if (!dir.exists(APP_DATA)) dir.create(APP_DATA, recursive = TRUE)
 stata_m_to_date <- function(m) { m <- as.integer(m); as.Date(sprintf("%d-%02d-01", 1960L + m %/% 12L, m %% 12L + 1L)) }
 MEASURE_LEVELS <- c("Headline PCE", "Core PCE", "Cleveland median", "Dallas trimmed mean")
@@ -71,6 +71,17 @@ get_dist <- function(hn) {
 }
 distribution_h <- bind_rows(lapply(names(HORIZONS), get_dist))
 write_csv(distribution_h, file.path(APP_DATA, "distribution_h.csv"))
+
+# --- paper Figure 2: weighted percentiles of category price changes -------------
+# 10/24/50/69/90th percentiles of the Dallas-set cross-section (24m), annualized.
+# g_i at month d is the change INTO d, so these are dated like the other series.
+pct_h <- bind_rows(lapply(names(HORIZONS), function(hn) {
+  L <- HORIZONS[[hn]]
+  readRDS(sprintf("../data/2_processed/d24m_distribution_DAL_M_%d.rds", L)) |>
+    transmute(date = stata_m_to_date(date), horizon = hn,
+              across(c(p10, p24, p50, p69, p90), ~ ((.x / 100 + 1)^(12 / L) - 1) * 100))
+})) |> filter(!is.na(p50))
+write_csv(pct_h, file.path(APP_DATA, "percentiles_h.csv"))
 
 # --- validation vs the pipeline's d22m --------------------------------------
 # Headline/core must equal d22m at the same month. Median/trimmed mean must equal
