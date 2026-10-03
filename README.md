@@ -72,6 +72,20 @@ are the *analytical layer* (a paper result, not monthly data). They power the
 **Robustness** tab and are refreshed only by re-running `compute/analytical/extract_heatmap.R`
 against the paper repo (annually, then `pack_app_data.R`), never by the monthly `refresh.sh`.
 
+## JavaScript front-end prototype (`site/`)
+
+An Observable Framework version of two tabs (Latest reading, Best-trims range) that
+loads without WebAssembly R: ~270 KB compressed on a first visit vs ~53 MB for the
+Shiny app. R remains the compute layer — `site/src/data/*.csv.R` are data loaders that
+read the validated `artifacts/` CSVs at build time.
+
+```bash
+cd site
+npm install          # once
+npm run dev          # live preview at http://127.0.0.1:3000
+npm run build        # static site in site/dist/ (deployable to Cloudflare or GitHub Pages)
+```
+
 ## Load time
 
 The app runs R in the visitor's browser (WebAssembly), so a first visit downloads the
