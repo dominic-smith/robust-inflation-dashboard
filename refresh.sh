@@ -8,16 +8,19 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-echo "== 1/4  download latest BEA underlying PCE detail =="
+echo "== 1/5  download latest BEA underlying PCE detail =="
 ( cd compute/code && Rscript download_bea.R )
 
-echo "== 2/4  compute measures (01m -> 22m) =="
+echo "== 2/5  compute measures (01m -> 22m) =="
 ( cd compute/code && Rscript run_compute.R )
 
-echo "== 3/4  export app artifacts =="
+echo "== 3/5  export app artifacts =="
 ( cd compute/code && Rscript export_artifacts.R )
 
-echo "== 4/4  rebuild shinylive static site =="
+echo "== 4/5  validate (FRED match, category alignment, Dallas gap) =="
+( cd compute/code && Rscript validate_refresh.R )
+
+echo "== 5/5  rebuild shinylive static site =="
 Rscript build.R
 
 echo
