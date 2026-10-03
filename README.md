@@ -21,12 +21,13 @@ https://dominic-smith.com/robust-inflation-dashboard/
 ## Tabs
 
 - **Latest reading** — the four measures now (headline PCE, core PCE, median PCE, trimmed mean), value cards + trend.
-- **The range** — the disagreement band across the robust measures over time, with summary spreads by inflation regime.
+- **Best-trims range** — the paper's Figure 1, live: the band of 12-month inflation produced by every trim statistically equivalent to the best (DM test, 5%), with the set mean and the headline/median/trimmed-mean lines. Which trims are equivalent is a paper result; the trims themselves are recomputed on each month's data.
+- **Measure disagreement** — the spread across core, median, and trimmed mean over time, with summary spreads by inflation regime.
 - **Distribution** — the latest month's category price changes weighted by spending, showing (and listing by name) what the trimmed mean discards.
-- **Robustness** — interactive trim-grid RMSE heatmap (α×β) with trend-measure / sample / category selectors and a reference-measure RMSE table. Analytical layer from the paper's prediction analysis (paper vintage), not the live monthly series.
+- **Robustness** — interactive trim-grid heatmap (α×β): RMSE relative to the best trim, or DM-test equivalence with the best trim; trend-measure / sample / category selectors and a reference-measure RMSE table. Paper vintage, not the live monthly series.
 - **Download & methods** — the monthly series as CSV, plus method notes.
 
-A global **horizon lever** (1-month / 3-month annualized / 12-month) drives the three live-series tabs.
+A global **horizon lever** (1-month / 3-month annualized / 12-month) drives Latest reading, Measure disagreement, and Distribution.
 
 ## Monthly update
 
@@ -49,12 +50,15 @@ compute/                self-contained measure pipeline (reuses the paper's R co
     ado/                pipeline helpers (Stata-compatible semantics, trim engine)
     1_cleaning/ 2_analysis/   01m load, 02m grouping, 10m relatives, 21m median, 22m combine
     download_bea.R      fetch the current BEA underlying detail
-    run_compute.R       01m -> 22m, pruned to the four dashboard measures
+    run_compute.R       01m -> 22m, pruned to the four dashboard measures, + best-trims band
+    best_trims_band.R   apply the paper's equivalent-trim sets to the current data
     export_artifacts.R  write horizon-aware app/data/ from the computed series
   analytical/
-    extract_heatmap.R   ONE-TIME/ANNUAL: extract the trim-grid RMSE surfaces from
-                        the paper's prediction outputs (NOT part of refresh.sh)
-  data/1_raw/           static author-classification inputs (BEA workbook is downloaded)
+    extract_heatmap.R   ONE-TIME/ANNUAL: extract the trim-grid RMSE surfaces, DM
+                        p-values, and equivalent-trim sets from the paper's outputs
+                        (NOT part of refresh.sh)
+  data/1_raw/           static inputs: author classifications + equiv_sets.csv
+                        (the BEA workbook is downloaded)
 build.R                 shinylive::export("app", "docs")
 refresh.sh              one-command monthly refresh
 docs/                   generated static site (served by GitHub Pages)
@@ -79,6 +83,13 @@ Rscript build.R          # produce the static site in docs/
   using the paper's methodology (weight each category's price change by spending
   share; take the weighted middle, or trim the weighted tails and average).
 
-Validated against the paper: at the Feb-2024 overlap the recomputed series match
-the published series to ~0.005 pp on average (residual differences are BEA data
-revisions), and the recomputed trimmed mean tracks the official Dallas Fed series.
+Validation:
+- Headline and core match FRED's official PCE price indexes exactly.
+- The best-trims band reproduces the paper's published band exactly for 1970–2018
+  (all 12 trend-measure × sample sets); later gaps are BEA revisions.
+- **Dating.** The median and trimmed mean are dated to the month of the price change
+  they measure. The paper's pipeline (`finish_trim`) dates its 12-month median and
+  trimmed mean one month later; the dashboard deliberately does not, so these two
+  series sit one month earlier than the paper's published lines. Correctly dated,
+  the trimmed mean tracks the official Dallas Fed series about twice as closely.
+  The paper's trim evaluation uses monthly rates and is unaffected.

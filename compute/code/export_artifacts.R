@@ -24,10 +24,10 @@ tm_cle <- readRDS("../data/2_processed/d20m_trimmed_mean_CLE_M_1_pas_50_50.rds")
 # headline & core: BEA price-index levels; median & trimmed: chain the monthly change
 idx_from_change <- function(df) {           # df: date, trimmed_mean_1 (monthly %)
   df <- df |> filter(!is.na(trimmed_mean_1)) |> arrange(date)
-  # Match finish_trim's lagged cumprod: the level at month d excludes d's own
-  # change, so the 12m change ties out to the paper's published series.
-  r <- 1 + df$trimmed_mean_1 / 100
-  tibble(date = df$date, idx = 100 * cumprod(c(1, head(r, -1))))
+  # trimmed_mean_1 at month d is the price change INTO month d, so the level at d
+  # includes d's own change. (The paper's finish_trim uses a lagged cumprod, which
+  # dates its 12m trimmed mean and median one month late; this is deliberate.)
+  tibble(date = df$date, idx = 100 * cumprod(1 + df$trimmed_mean_1 / 100))
 }
 idx_list <- list(
   `Headline PCE`        = top  |> filter(line == 1)   |> distinct(date, idx = price_index),
@@ -72,15 +72,26 @@ get_dist <- function(hn) {
 distribution_h <- bind_rows(lapply(names(HORIZONS), get_dist))
 write_csv(distribution_h, file.path(APP_DATA, "distribution_h.csv"))
 
-# --- validation: 12m from the index should match the paper's d22m ----------
+# --- validation vs the pipeline's d22m --------------------------------------
+# Headline/core must equal d22m at the same month. Median/trimmed mean must equal
+# d22m one month LATER (d22m inherits finish_trim's one-month lag).
 chk <- series_h |> filter(horizon == "12m") |>
   mutate(dm = as.integer((as.integer(format(date, "%Y")) - 1960) * 12 + as.integer(format(date, "%m")) - 1))
 agg <- readRDS("../data/3_done/d22m_agg_time_series.rds")
 cmp <- agg |> transmute(dm = date, `Headline PCE` = agg_pce, `Core PCE` = core_pce,
                         `Cleveland median` = median_pce, `Dallas trimmed mean` = trimmed_mean) |>
-  pivot_longer(-dm, names_to = "measure", values_to = "ref")
+  pivot_longer(-dm, names_to = "measure", values_to = "ref") |>
+  mutate(dm = ifelse(measure %in% c("Cleveland median", "Dallas trimmed mean"), dm - 1L, dm))
 v <- chk |> inner_join(cmp, by = c("dm", "measure")) |> mutate(d = abs(value - ref))
-message(sprintf("12m validation vs d22m: max|Δ|=%.4f  mean|Δ|=%.5f", max(v$d, na.rm=TRUE), mean(v$d, na.rm=TRUE)))
+vv <- v |> group_by(measure) |> summarise(max_d = max(d, na.rm = TRUE))
+message("12m validation vs d22m (median/trim shifted 1m): ",
+        paste(sprintf("%s %.1e", vv$measure, vv$max_d), collapse = "; "))
+stopifnot(all(vv$max_d < 1e-6))
+
+# --- live best-trims band (paper Figure 1) ----------------------------------
+band <- readRDS("../data/3_done/d_best_trims_band.rds") |>
+  mutate(date = stata_m_to_date(date))
+write_csv(band, file.path(APP_DATA, "best_trims_band.csv"))
 
 # --- vintage stamp ---------------------------------------------------------
 vintage_date <- max(series_h$date[series_h$horizon == "12m"])

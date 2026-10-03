@@ -20,6 +20,8 @@ distribution_h <- read_csv("data/distribution_h.csv", show_col_types = FALSE) |>
 heat <- read_csv("data/heatmap_rmse.csv", show_col_types = FALSE,
                  col_types = "ccciid")
 heat_refs <- read_csv("data/heatmap_refs.csv", show_col_types = FALSE)
+heat_dm <- read_csv("data/heatmap_dm.csv", show_col_types = FALSE, col_types = "cciid")
+band <- read_csv("data/best_trims_band.csv", show_col_types = FALSE)
 
 grabj <- function(file, key, default = "") {
   ln <- readLines(file, warn = FALSE)
@@ -70,7 +72,24 @@ ui <- navbarPage(
     div(class = "foot", HTML(sprintf("Source: %s. Ocampo, Schoenle &amp; Smith, \"Robustness of Robust Measures of Inflation.\"", SOURCE_NOTE)))
   )),
 
-  tabPanel("The range", fluidPage(
+  tabPanel("Best-trims range", fluidPage(
+    h3("What range of trend inflation do the best trims support?"),
+    p(class = "lead", "Many trimmed means track trend inflation about equally well: their errors are statistically indistinguishable from the single best trim (Diebold–Mariano test, 5% level). Rather than one number, the shaded band shows the 12-month inflation rates that whole set of near-optimal trims produces each month. This is the paper's Figure 1, updated monthly."),
+    uiOutput("bt_cards"), br(),
+    sidebarLayout(
+      sidebarPanel(width = 3,
+        radioButtons("bt_target", "Trend measure the trims are chosen to track",
+          choices = setNames(names(TARGET_LABELS), TARGET_LABELS), selected = "c_0_37"),
+        radioButtons("bt_sample", "Sample used to choose the trims",
+          choices = setNames(names(SAMPLE_LABELS), SAMPLE_LABELS), selected = "long"),
+        radioButtons("bt_window", "Time window",
+          c("2020 onward (as in Figure 1)" = "2020", "Last 10 years" = "10", "Full history" = "0"),
+          selected = "2020")),
+      mainPanel(width = 9, plotOutput("bt_plot", height = "460px"))),
+    div(class = "foot", "Which trims are statistically equivalent is fixed from the paper's evaluation; each trim is recomputed on every month's data. Band and lines are 12-month changes; the horizon setting does not apply on this tab.")
+  )),
+
+  tabPanel("Measure disagreement", fluidPage(
     h3("How much do the measures disagree?"),
     p(class = "lead", "The shaded band is the range spanned by core, median, and the trimmed mean each month — a gauge of how much the choice of measure matters. It widens when inflation is turning."),
     uiOutput("range_cards"), br(),
@@ -95,12 +114,14 @@ ui <- navbarPage(
 
   tabPanel("Robustness", fluidPage(
     h3("Which trims best track trend inflation?"),
-    p(class = "lead", "Every point is a trimmed mean defined by how much it cuts from the low end (α) and the high end (β). Colour is its error in tracking a chosen measure of trend inflation, relative to the single best trim (dark = better). The broad dark basin is the paper's key finding: a wide range of trims does about equally well — the trimmed mean is robust."),
+    p(class = "lead", "Every point is a trimmed mean defined by how much it cuts from the low end (α) and the high end (β). Colour is its error in tracking a chosen measure of trend inflation, relative to the single best trim (dark = better). The broad dark basin is the paper's key finding: a wide range of trims does about equally well — the trimmed mean is robust. Switch to “Statistical equivalence” to see which trims cannot be distinguished from the best; that set defines the band on the Best-trims range tab."),
     sidebarLayout(
       sidebarPanel(width = 3,
         radioButtons("hm_target", "Trend measure", choices = setNames(names(TARGET_LABELS), TARGET_LABELS), selected = "c_0_37"),
         radioButtons("hm_sample", "Sample", choices = setNames(names(SAMPLE_LABELS), SAMPLE_LABELS), selected = "long"),
         radioButtons("hm_group", "Categories", choices = setNames(names(GROUP_LABELS), GROUP_LABELS), selected = "4"),
+        radioButtons("hm_view", "Show",
+          c("Error relative to best trim" = "rmse", "Statistical equivalence (DM test)" = "dm"), selected = "rmse"),
         br(), tableOutput("hm_refs")),
       mainPanel(width = 9, plotOutput("heatmap", height = "560px"))),
     div(class = "foot", "From the paper's evaluation of every trim against each trend measure over the chosen sample (fixed at the paper's data vintage), not the live monthly series. RMSE = root mean squared error vs the trend measure.")
@@ -223,28 +244,77 @@ server <- function(input, output, session) {
   output$disc_low  <- renderTable(disc_tbl(FALSE), striped = TRUE, width = "100%")
   output$disc_high <- renderTable(disc_tbl(TRUE),  striped = TRUE, width = "100%")
 
+  # Best-trims range (paper Figure 1, live)
+  bsel <- reactive(band |> filter(target == input$bt_target, sample == input$bt_sample))
+  output$bt_cards <- renderUI({
+    b <- bsel(); last <- b[which.max(b$date), ]
+    tm12 <- series_h |> filter(horizon == "12m", measure == "Dallas trimmed mean", date == last$date)
+    mk <- function(l, v, s) column(3, div(class = "value-card", div(class = "lbl", l),
+      div(class = "val", v), div(class = "sub", s)))
+    fluidRow(
+      mk("Best-trims range", sprintf("%.1f–%.1f%%", last$lo, last$hi), format(last$date, "%b %Y")),
+      mk("Set mean", pct(last$mean), "average of the trims"),
+      mk("Trimmed mean (24/69)", if (nrow(tm12)) pct(tm12$value) else "–", format(last$date, "%b %Y")),
+      mk("Trims in the set", as.character(last$n_trims), sprintf("of 2,601 (%s)", SAMPLE_LABELS[[input$bt_sample]])))
+  })
+  output$bt_plot <- renderPlot({
+    co <- switch(input$bt_window, `2020` = as.Date("2020-01-01"), `10` = cutoff_for(bsel()$date, 10), min(bsel()$date))
+    b <- bsel() |> filter(date >= co)
+    ln <- series_h |> filter(horizon == "12m", date >= co,
+                             measure %in% c("Headline PCE", "Cleveland median", "Dallas trimmed mean")) |>
+      mutate(measure = factor(as.character(measure), levels = c("Headline PCE", "Cleveland median", "Dallas trimmed mean")))
+    ggplot() +
+      geom_ribbon(data = b, aes(date, ymin = lo, ymax = hi, fill = "Range across best trims"), alpha = 0.6) +
+      geom_line(data = b, aes(date, mean, linetype = "Set mean"), color = "grey20", linewidth = 0.7) +
+      geom_line(data = ln, aes(date, value, color = measure), linewidth = 0.9) +
+      geom_hline(yintercept = 2, linetype = "dashed", color = "#bbbbbb") +
+      scale_fill_manual(values = c("Range across best trims" = "grey72"), name = NULL) +
+      scale_linetype_manual(values = c("Set mean" = "solid"), name = NULL) +
+      scale_color_manual(values = MEASURE_COLORS[c("Headline PCE", "Cleveland median", "Dallas trimmed mean")], name = NULL) +
+      scale_y_continuous(labels = function(x) paste0(x, "%")) +
+      guides(fill = guide_legend(order = 1), linetype = guide_legend(order = 2), color = guide_legend(order = 3)) +
+      labs(y = "12-month change", caption = "Dashed line: 2% target.") +
+      theme_rrm() + theme(legend.box = "vertical", legend.spacing.y = grid::unit(2, "pt"))
+  })
+
   # Tab 4 — robustness heatmap
   hm_panel <- reactive(heat |> filter(group == input$hm_group, sample == input$hm_sample, target == input$hm_target))
   output$heatmap <- renderPlot({
-    d <- hm_panel(); best <- min(d$rmse, na.rm = TRUE)
-    d$rel <- pmin(d$rmse / best, 2.5)
     refs <- heat_refs |> filter(group == input$hm_group, sample == input$hm_sample, target == input$hm_target)
-    bl <- refs$best_lb[1]; bb <- refs$best_beta[1]
+    if (input$hm_view == "dm") {
+      validate(need(input$hm_group == "4", "Equivalence tests were run for the all-categories set only. Switch Categories to “All categories”."))
+      d <- heat_dm |> filter(sample == input$hm_sample, target == input$hm_target)
+      bl <- d$lb[is.na(d$p)][1]; bb <- d$beta[is.na(d$p)][1]      # the best trim has p = NA
+      d$p[is.na(d$p)] <- 1                                         # ...and is trivially equivalent to itself
+      d$cls <- cut(d$p, c(-Inf, 0.01, 0.05, 0.10, Inf), right = FALSE,
+                   labels = c("p < 0.01", "0.01–0.05", "0.05–0.10 (equivalent)", "≥ 0.10 (equivalent)"))
+      fill_layer <- list(geom_raster(aes(fill = cls)),
+        scale_fill_manual(values = c("#F4F1E4", "#C6DBEF", "#6BAED6", "#08519C"), na.value = "#08519C",
+                          drop = FALSE, name = "DM test vs\nbest trim"))
+    } else {
+      d <- hm_panel(); best <- min(d$rmse, na.rm = TRUE)
+      d$rel <- pmin(d$rmse / best, 2.5)
+      bl <- refs$best_lb[1]; bb <- refs$best_beta[1]
+      fill_layer <- list(geom_raster(aes(fill = rel)),
+        scale_fill_viridis_c(option = "viridis", direction = 1, limits = c(1, 2.5),
+                             breaks = c(1, 1.5, 2, 2.5), labels = c("best", "1.5×", "2×", "≥2.5×"), name = "RMSE\nvs best"))
+    }
+    mcol <- if (input$hm_view == "dm") "grey15" else "white"   # visible on either background
     marks <- data.frame(
       lb = c(0, 24, 50, 8, bl), beta = c(0, 31, 50, 8, bb),
       label = factor(c("Headline", "Trimmed PCE", "Median", "Trimmed CPI", "Best trim"),
                      levels = c("Headline", "Trimmed PCE", "Median", "Trimmed CPI", "Best trim")))
     ggplot(d, aes(lb, beta)) +
-      geom_raster(aes(fill = rel)) +
+      fill_layer +
       geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "grey85") +
-      geom_point(data = marks[marks$label != "Best trim", ], aes(lb, beta, shape = label), color = "white", size = 2.6, stroke = 1.1) +
+      geom_point(data = marks[marks$label != "Best trim", ], aes(lb, beta, shape = label), color = mcol, size = 2.6, stroke = 1.1) +
       geom_point(data = marks[marks$label == "Best trim", ], aes(lb, beta), shape = 42, color = "#FFD700", size = 12) +
-      scale_fill_viridis_c(option = "viridis", direction = 1, limits = c(1, 2.5),
-                           breaks = c(1, 1.5, 2, 2.5), labels = c("best", "1.5×", "2×", "≥2.5×"), name = "RMSE\nvs best") +
       scale_shape_manual(values = c(Headline = 21, `Trimmed PCE` = 23, Median = 22, `Trimmed CPI` = 24), name = NULL) +
       coord_fixed(xlim = c(0, 50), ylim = c(0, 50), expand = FALSE) +
       labs(x = "Lower trim α (%)", y = "Upper trim β (%)") +
-      theme_rrm() + theme(panel.grid = element_blank())
+      guides(fill = if (input$hm_view == "dm") guide_legend(nrow = 2, order = 1) else guide_colorbar(order = 1),
+             shape = guide_legend(order = 2, override.aes = list(color = "grey15"))) +
+      theme_rrm() + theme(panel.grid = element_blank(), legend.box = "vertical")
   })
   output$hm_refs <- renderTable({
     refs <- heat_refs |> filter(group == input$hm_group, sample == input$hm_sample, target == input$hm_target)

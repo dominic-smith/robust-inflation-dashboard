@@ -16,9 +16,10 @@ suppressPackageStartupMessages({
 
 GLOBALS <- new.env(parent = emptyenv())
 GLOBALS$figures <- "./figures"
-# Only the groups the dashboard's measures need are computed by 10m's group loop;
-# CLE and DAL relatives are created by explicit calls in main_10m regardless.
-GLOBALS$groups <- character(0)
+# Only the groups the dashboard needs are computed by 10m's group loop: group 4
+# (time-consistent set) feeds the best-trims band. CLE and DAL relatives are
+# created by explicit calls in main_10m regardless.
+GLOBALS$groups <- "4"
 GLOBALS$freqs  <- "M"
 
 GLOBALS$agg_color    <- "#1F5889"

@@ -40,5 +40,8 @@ run("2_analysis/21m-median_pce.R")
 # Batch 3: combine into the aggregate time series (d22m_agg_time_series[_1])
 run("2_analysis/22m-combine_measures.R")
 
+# Live band across the paper's statistically-equivalent best trims (Figure 1)
+run("best_trims_band.R")
+
 message("\nCompute done. Series written to data/3_done/d22m_agg_time_series.rds")
 message("Next: Rscript export_artifacts.R")

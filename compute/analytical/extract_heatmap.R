@@ -46,6 +46,26 @@ for (g in groups) for (s in samples) {
   }
 }
 
+# DM-equivalence p-values (group 4) from the paper's heatmap step. Vector order is
+# lb 0:50 outer, ub 100:50 inner — the paper's trim-column order (verified against
+# d31m_prediction_series). The best trim itself has p = NA.
+grid_lb <- rep(0:50, each = 51); grid_ub <- rep(100:50, times = 51)
+dm_rows <- list(); eq_rows <- list()
+for (o in targets) for (s in samples) {
+  p <- readRDS(file.path(PAPER_OUT, sprintf("p_DM_vec_%s_%s.rds", o, s)))
+  stopifnot(length(p) == 2601)
+  dm_rows[[length(dm_rows) + 1]] <- data.frame(target = o, sample = s, lb = grid_lb,
+                                               beta = 100 - grid_ub, p = round(p, 4))
+  # The paper's equivalence set (Figure 1 band): p >= 0.05, which excludes the
+  # best trim (p = NA) exactly as in Trimmed_Mean_HeatMap.R.
+  k <- which(!is.na(p) & p >= 0.05)
+  eq_rows[[length(eq_rows) + 1]] <- data.frame(target = o, sample = s,
+                                               lb = grid_lb[k], ub = grid_ub[k])
+}
+write_csv(bind_rows(dm_rows), file.path(APP_DATA, "heatmap_dm.csv"))
+# Static input for the live band (compute/data/1_raw, committed; read by best_trims_band.R)
+write_csv(bind_rows(eq_rows), "../data/1_raw/equiv_sets.csv")
+
 grid <- bind_rows(grid_rows)
 refs <- bind_rows(ref_rows)
 write_csv(grid, file.path(APP_DATA, "heatmap_rmse.csv"))
