@@ -72,19 +72,29 @@ are the *analytical layer* (a paper result, not monthly data). They power the
 **Robustness** tab and are refreshed only by re-running `compute/analytical/extract_heatmap.R`
 against the paper repo (annually, then `pack_app_data.R`), never by the monthly `refresh.sh`.
 
-## JavaScript front-end prototype (`site/`)
+## JavaScript front end (`site/`), live at `/proto/`
 
-An Observable Framework version of two tabs (Latest reading, Best-trims range) that
-loads without WebAssembly R: ~270 KB compressed on a first visit vs ~53 MB for the
-Shiny app. R remains the compute layer — `site/src/data/*.csv.R` are data loaders that
-read the validated `artifacts/` CSVs at build time.
+An Observable Framework version of all six tabs that runs without WebAssembly R:
+first chart in ~1 s on a cold visit vs ~17 s for the Shiny app. R remains the compute
+layer — `site/src/data/*.R` are data loaders that read the validated `artifacts/`
+CSVs at build time and do every derived calculation (bands, histogram bins, trim cut
+points, discarded lists, heatmap classes, DM outline); the pages only filter and draw.
+Values were checked against the Shiny app.
 
 ```bash
 cd site
 npm install          # once
 npm run dev          # live preview at http://127.0.0.1:3000
-npm run build        # static site in site/dist/ (deployable to Cloudflare or GitHub Pages)
+npm run build        # static site in site/dist/ (refresh.sh runs this; build.R copies it to docs/proto/)
 ```
+
+Notes:
+- `npm run build` clears Framework's loader cache first. Framework otherwise reuses
+  cached loader output even when `artifacts/` has changed, which would ship stale data.
+- Loaders keep 6 decimals; pages format for display (rounding earlier double-rounds).
+- The serif font is served from `site/src/fonts` (copied into `dist/fonts` by the build),
+  and `globalStylesheets: []` removes Framework's default Google Fonts link, so pages
+  make no third-party requests.
 
 ## Load time
 

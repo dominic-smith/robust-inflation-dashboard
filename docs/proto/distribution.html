@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="generator" content="Observable Framework v1.13.4">
+<title>Distribution | Robust Measures of Inflation</title>
+
+<link rel="preload" as="style" href="./_observablehq/theme-air.d5b7fcbe.css">
+<link rel="preload" as="style" href="./_observablehq/stdlib/inputs.f7bf0e12.css">
+<link rel="stylesheet" type="text/css" href="./_observablehq/theme-air.d5b7fcbe.css">
+<link rel="stylesheet" type="text/css" href="./_observablehq/stdlib/inputs.f7bf0e12.css">
+<link rel="modulepreload" href="./_observablehq/client.ce6ccea5.js">
+<link rel="modulepreload" href="./_observablehq/runtime.fa9f71c0.js">
+<link rel="modulepreload" href="./_observablehq/stdlib.c4209144.js">
+<link rel="modulepreload" href="./_import/components/style.c688cee4.js">
+<link rel="modulepreload" href="./_npm/d3@7.9.0/080cf928.js">
+<link rel="modulepreload" href="./_npm/htl@1.0.0/11521f02.js">
+<link rel="modulepreload" href="./_observablehq/stdlib/inputs.0cc910eb.js">
+<link rel="modulepreload" href="./_npm/@observablehq/plot@0.6.17/93ce672e.js">
+<link rel="modulepreload" href="./_npm/d3-dsv@3.0.1/097745a2.js">
+<link rel="modulepreload" href="./_npm/isoformat@0.2.1/604cb63b.js">
+<link rel="modulepreload" href="./_npm/d3-array@3.2.4/b8e751b6.js">
+<link rel="modulepreload" href="./_npm/d3-axis@3.0.0/c662ea05.js">
+<link rel="modulepreload" href="./_npm/d3-brush@3.0.0/d162d8c6.js">
+<link rel="modulepreload" href="./_npm/d3-chord@3.0.1/5cedd0be.js">
+<link rel="modulepreload" href="./_npm/d3-color@3.1.0/65d51007.js">
+<link rel="modulepreload" href="./_npm/d3-contour@4.0.2/c576a91a.js">
+<link rel="modulepreload" href="./_npm/d3-delaunay@6.0.4/8b43826d.js">
+<link rel="modulepreload" href="./_npm/d3-dispatch@3.0.1/3fb06f14.js">
+<link rel="modulepreload" href="./_npm/d3-drag@3.0.0/20b76948.js">
+<link rel="modulepreload" href="./_npm/d3-ease@3.0.1/8683b012.js">
+<link rel="modulepreload" href="./_npm/d3-fetch@3.0.1/5c319046.js">
+<link rel="modulepreload" href="./_npm/d3-force@3.0.0/33924f3e.js">
+<link rel="modulepreload" href="./_npm/d3-format@3.1.2/8d67a1ae.js">
+<link rel="modulepreload" href="./_npm/d3-geo@3.1.1/8037bd0b.js">
+<link rel="modulepreload" href="./_npm/d3-hierarchy@3.1.2/a9ba0229.js">
+<link rel="modulepreload" href="./_npm/d3-interpolate@3.0.1/e0a47f97.js">
+<link rel="modulepreload" href="./_npm/d3-path@3.1.0/f9e9e0ab.js">
+<link rel="modulepreload" href="./_npm/d3-polygon@3.0.1/2da8eb3b.js">
+<link rel="modulepreload" href="./_npm/d3-quadtree@3.0.1/09002e01.js">
+<link rel="modulepreload" href="./_npm/d3-random@3.0.1/5108797c.js">
+<link rel="modulepreload" href="./_npm/d3-scale@4.0.2/c9f2571b.js">
+<link rel="modulepreload" href="./_npm/d3-scale-chromatic@3.1.0/f3c78e0d.js">
+<link rel="modulepreload" href="./_npm/d3-selection@3.0.0/28717d05.js">
+<link rel="modulepreload" href="./_npm/d3-shape@3.2.0/7c6e2a50.js">
+<link rel="modulepreload" href="./_npm/d3-time@3.1.0/3d1d57c6.js">
+<link rel="modulepreload" href="./_npm/d3-time-format@4.1.0/643581a8.js">
+<link rel="modulepreload" href="./_npm/d3-timer@3.0.1/e99232db.js">
+<link rel="modulepreload" href="./_npm/d3-transition@3.0.1/bd07fd9a.js">
+<link rel="modulepreload" href="./_npm/d3-zoom@3.0.0/d09f7cc9.js">
+<link rel="modulepreload" href="./_npm/interval-tree-1d@1.0.4/f53f17b2.js">
+<link rel="modulepreload" href="./_npm/internmap@2.0.3/af036d7e.js">
+<link rel="modulepreload" href="./_npm/delaunator@5.1.0/7b06abe7.js">
+<link rel="modulepreload" href="./_npm/binary-search-bounds@2.0.5/5f640032.js">
+<link rel="modulepreload" href="./_npm/robust-predicates@3.0.3/b42f30a7.js">
+<style>
+@font-face { font-family: "Source Serif 4"; font-style: normal; font-weight: 200 900; font-display: swap;
+  src: url("./fonts/source-serif-4-latin-wght-normal.woff2") format("woff2"); }
+@font-face { font-family: "Source Serif 4"; font-style: italic; font-weight: 200 900; font-display: swap;
+  src: url("./fonts/source-serif-4-latin-wght-italic.woff2") format("woff2"); }
+</style>
+<script type="module">
+
+import {define} from "./_observablehq/client.ce6ccea5.js";
+import {registerFile} from "./_observablehq/stdlib.c4209144.js";
+
+registerFile("./data/dist.json", {"name":"./data/dist.json","mimeType":"application/json","path":"./_file/data/dist.fbcdca8c.json","lastModified":1791029082691,"size":10046});
+registerFile("./data/percentiles.csv", {"name":"./data/percentiles.csv","mimeType":"text/csv","path":"./_file/data/percentiles.d378b831.csv","lastModified":1791029082904,"size":153991});
+registerFile("./data/series.csv", {"name":"./data/series.csv","mimeType":"text/csv","path":"./_file/data/series.ce3ac8a9.csv","lastModified":1791029082442,"size":425204});
+
+define({id: "27c63bef", inputs: ["FileAttachment"], outputs: ["colorOf","horizonInput","changeLabel","monthLabel","dist","series","pcts"], body: async (FileAttachment) => {
+const {colorOf, horizonInput, changeLabel, monthLabel} = await import("./_import/components/style.c688cee4.js");
+const dist = FileAttachment("./data/dist.json").json();
+const series = FileAttachment("./data/series.csv").csv({typed: true});
+const pcts = FileAttachment("./data/percentiles.csv").csv({typed: true});
+return {colorOf,horizonInput,changeLabel,monthLabel,dist,series,pcts};
+}});
+
+define({id: "9728895a", inputs: ["view","horizonInput"], outputs: ["horizon"], body: (view,horizonInput) => {
+const horizon = view(horizonInput());
+return {horizon};
+}});
+
+define({id: "938e5168", inputs: ["dist","horizon","series","d3","colorOf","html"], outputs: ["d","month","sh","last","at","markers","tailTable"], body: (dist,horizon,series,d3,colorOf,html) => {
+const d = dist.find((r) => r.horizon === horizon);
+const month = new Date(d.month);
+const sh = series.filter((r) => r.horizon === horizon);
+const last = d3.max(sh, (r) => r.date);
+const at = (m) => sh.find((r) => r.measure === m && +r.date === +last)?.value;
+const markers = [
+  {name: "Headline (mean)", value: at("Headline PCE"), color: "#111111"},
+  {name: "Median", value: at("Cleveland median"), color: colorOf("Cleveland median")},
+  {name: "Trimmed mean", value: at("Dallas trimmed mean"), color: colorOf("Dallas trimmed mean")}
+];
+const tailTable = (rows) => html`<table class="tail">
+  <thead><tr><th>Category</th><th>Change</th><th>Weight</th></tr></thead>
+  <tbody>${rows.map((r) => html`<tr><td>${r.category}</td><td>${r.change >= 0 ? "+" : ""}${r.change.toFixed(1)}%</td><td>${r.weight.toFixed(1)}%</td></tr>`)}</tbody></table>`;
+return {d,month,sh,last,at,markers,tailTable};
+}});
+
+define({id: "24e1e8f8", mode: "inline", inputs: ["monthLabel","month","display"], body: async (monthLabel,month,display) => {
+display(await(
+monthLabel(month)
+))
+}});
+
+define({id: "2debf034", mode: "inline", inputs: ["changeLabel","horizon","display"], body: async (changeLabel,horizon,display) => {
+display(await(
+changeLabel(horizon)
+))
+}});
+
+define({id: "0c8ed1de", mode: "inline", inputs: ["resize","Plot","changeLabel","horizon","markers","d","display"], body: async (resize,Plot,changeLabel,horizon,markers,d,display) => {
+display(await(
+resize((width) => Plot.plot({
+  width, height: 400, marginLeft: 50,
+  x: {domain: [-12, 18], label: `${changeLabel(horizon)} by category (%)`},
+  y: {grid: true, label: "Share of spending"},
+  color: {legend: true, domain: ["Kept (averaged)", "Trimmed away", ...markers.map((m) => m.name)],
+          range: ["#4C78A8", "#C9CDD2", ...markers.map((m) => m.color)]},
+  marks: [
+    Plot.rectY(d.bins, {x1: (b) => b.x - 0.5, x2: (b) => b.x + 0.5, y: "w", fill: "status", stroke: "white", clip: true}),
+    Plot.ruleX(markers.filter((m) => m.value != null), {x: "value", stroke: "color", strokeWidth: 2, clip: true}),
+    Plot.tip(d.bins, Plot.pointerX({x: "x", y: "w", title: (b) => `${(b.x - 0.5).toFixed(0)}% to ${(b.x + 0.5).toFixed(0)}%\n${(100 * b.w).toFixed(1)}% of spending — ${b.status.toLowerCase()}`}))
+  ]
+}))
+))
+}});
+
+define({id: "7b73106c", mode: "inline", inputs: ["d","display"], body: async (d,display) => {
+display(await(
+d.n_low
+))
+}});
+
+define({id: "218e121b", mode: "inline", inputs: ["d","display"], body: async (d,display) => {
+display(await(
+d.n_high
+))
+}});
+
+define({id: "682794f4", mode: "inline", inputs: ["tailTable","d","display"], body: async (tailTable,d,display) => {
+display(await(
+tailTable(d.low_tail)
+))
+}});
+
+define({id: "a05404e2", mode: "inline", inputs: ["tailTable","d","display"], body: async (tailTable,d,display) => {
+display(await(
+tailTable(d.high_tail)
+))
+}});
+
+define({id: "ea6fdfcc", inputs: ["view","Inputs"], outputs: ["start"], body: (view,Inputs) => {
+const start = view(Inputs.radio(new Map([["Last 10 years", "10"], ["Since 1990", "1990"], ["Full history (1960–)", "0"]]), {label: "Time window", value: "10"}));
+return {start};
+}});
+
+define({id: "7fd9684d", inputs: ["pcts","horizon","d3","start"], outputs: ["ph","pEnd","pw","pl"], body: (pcts,horizon,d3,start) => {
+const ph = pcts.filter((r) => r.horizon === horizon);
+const pEnd = d3.max(ph, (r) => r.date);
+const pw = ph.filter((r) => start === "0" || r.date >= (start === "1990" ? new Date(Date.UTC(1990, 0, 1)) : d3.utcYear.offset(pEnd, -10)));
+const pl = ["p10", "p24", "p50", "p69", "p90"].flatMap((q) => pw.map((r) => ({date: r.date, q, value: r[q],
+  grp: q === "p50" ? "50th (median)" : q === "p24" || q === "p69" ? "24th & 69th (trimmed-mean cut points)" : "10th & 90th"})));
+return {ph,pEnd,pw,pl};
+}});
+
+define({id: "e39fc493", mode: "inline", inputs: ["resize","Plot","changeLabel","horizon","colorOf","pw","pl","monthLabel","display"], body: async (resize,Plot,changeLabel,horizon,colorOf,pw,pl,monthLabel,display) => {
+display(await(
+resize((width) => Plot.plot({
+  width, height: 400, marginLeft: 45,
+  y: {grid: true, label: changeLabel(horizon) + " (%)", tickFormat: (v) => `${v}%`},
+  x: {label: null},
+  color: {legend: true, domain: ["10th & 90th", "24th & 69th (trimmed-mean cut points)", "50th (median)"],
+          range: ["#8DA0B3", colorOf("Dallas trimmed mean"), colorOf("Cleveland median")]},
+  marks: [
+    Plot.areaY(pw, {x: "date", y1: "p24", y2: "p69", fill: colorOf("Dallas trimmed mean"), fillOpacity: 0.12}),
+    Plot.ruleY([2], {stroke: "#bbb", strokeDasharray: "4,3"}),
+    Plot.lineY(pl, {x: "date", y: "value", z: "q", stroke: "grp", strokeWidth: 1.1}),
+    Plot.ruleX(pw, Plot.pointerX({x: "date", stroke: "#999", strokeOpacity: 0.7})),
+    Plot.tip(pw, Plot.pointerX({x: "date", y: "p90", title: (r) => `${monthLabel(r.date)}\n90th: ${r.p90.toFixed(1)}%\n69th: ${r.p69.toFixed(1)}%\n50th: ${r.p50.toFixed(1)}%\n24th: ${r.p24.toFixed(1)}%\n10th: ${r.p10.toFixed(1)}%`}))
+  ]
+}))
+))
+}});
+
+</script>
+</head>
+<body>
+<input id="observablehq-sidebar-toggle" type="checkbox" title="Toggle sidebar">
+<label id="observablehq-sidebar-backdrop" for="observablehq-sidebar-toggle"></label>
+<nav id="observablehq-sidebar">
+  <ol>
+    <label id="observablehq-sidebar-close" for="observablehq-sidebar-toggle"></label>
+    <li class="observablehq-link"><a href="./">Robust Measures of Inflation</a></li>
+  </ol>
+  <ol>
+    <li class="observablehq-link"><a href="./">Latest reading</a></li>
+    <li class="observablehq-link"><a href="./best-trims-range">Best-trims range</a></li>
+    <li class="observablehq-link"><a href="./measure-disagreement">Measure disagreement</a></li>
+    <li class="observablehq-link observablehq-link-active"><a href="./distribution">Distribution</a></li>
+    <li class="observablehq-link"><a href="./robustness">Robustness</a></li>
+    <li class="observablehq-link"><a href="./download">Download &amp; methods</a></li>
+  </ol>
+</nav>
+<script>{const e=document.querySelector("#observablehq-sidebar"),o=document.querySelector("#observablehq-sidebar-toggle"),r=sessionStorage.getItem("observablehq-sidebar");r?o.checked=r==="true":o.indeterminate=!0;for(const t of document.querySelectorAll("#observablehq-sidebar summary")){const s=t.parentElement;switch(sessionStorage.getItem(`observablehq-sidebar:${t.textContent}`)){case"true":s.open=!0;break;case"false":s.classList.contains("observablehq-section-active")||(s.open=!1);break}}addEventListener("beforeunload",()=>sessionStorage.setItem("observablehq-sidebar-scrolly",`${e.scrollTop}`));const a=sessionStorage.getItem("observablehq-sidebar-scrolly");a!=null&&(e.style.cssText="overflow: hidden;",e.scrollTop=+a,e.style.cssText="");}</script>
+<div id="observablehq-center">
+<main id="observablehq-main" class="observablehq">
+<div class="observablehq observablehq--block"><!--:27c63bef:--></div>
+<h1 id="what-trimming-removes" tabindex="-1"><a class="observablehq-header-anchor" href="#what-trimming-removes">What trimming removes</a></h1>
+<div class="observablehq observablehq--block"><!--:9728895a:--></div>
+<div class="observablehq observablehq--block"><!--:938e5168:--></div>
+<p class="muted"><observablehq-loading></observablehq-loading><!--:24e1e8f8:-->. Each detailed PCE category's price change (<observablehq-loading></observablehq-loading><!--:2debf034:-->), weighted by its share of spending. The trimmed mean discards the weighted tails (grey) and averages the rest; the median is the middle. Headline keeps everything.</p>
+<div class="card"><observablehq-loading></observablehq-loading><!--:0c8ed1de:--></div>
+<h2 id="what-the-trimmed-mean-discards" tabindex="-1"><a class="observablehq-header-anchor" href="#what-the-trimmed-mean-discards">What the trimmed mean discards</a></h2>
+<p class="muted">The categories in the trimmed tails this month, largest weight first (<observablehq-loading></observablehq-loading><!--:7b73106c:--> categories in the low tail, <observablehq-loading></observablehq-loading><!--:218e121b:--> in the high tail).</p>
+<div class="grid grid-cols-2">
+  <div class="card"><h2>Cheapest (low tail)</h2><observablehq-loading></observablehq-loading><!--:682794f4:--></div>
+  <div class="card"><h2>Most expensive (high tail)</h2><observablehq-loading></observablehq-loading><!--:a05404e2:--></div>
+</div>
+<h2 id="the-spread-of-price-changes-over-time" tabindex="-1"><a class="observablehq-header-anchor" href="#the-spread-of-price-changes-over-time">The spread of price changes over time</a></h2>
+<p class="muted">Percentiles of category price changes each month, weighted by spending (the paper's Figure 2). The shaded 24th–69th band is the slice the trimmed mean averages; the 50th percentile is the median.</p>
+<div class="observablehq observablehq--block"><!--:ea6fdfcc:--></div>
+<div class="observablehq observablehq--block"><!--:7fd9684d:--></div>
+<div class="card"><observablehq-loading></observablehq-loading><!--:e39fc493:--></div>
+<style>
+table.tail { width: 100%; max-width: none; font-size: 13px; }
+table.tail td:nth-child(n+2), table.tail th:nth-child(n+2) { text-align: right; white-space: nowrap; }
+</style>
+</main>
+<footer id="observablehq-footer">
+<div>Ocampo, Schoenle &amp; Smith, “Robustness of Robust Measures of Inflation.” Computed from BEA underlying PCE detail (current vintage).</div>
+</footer>
+</div>
+</body>
+</html>

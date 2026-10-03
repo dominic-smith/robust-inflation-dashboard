@@ -1,4 +1,5 @@
 // Shared labels, colours and formatters (mirrors app/R/theme_dashboard.R)
+import * as Inputs from "../../_observablehq/stdlib/inputs.0cc910eb.js";
 export const MEASURES = ["Headline PCE", "Core PCE", "Cleveland median", "Dallas trimmed mean"];
 export const COLORS = ["#7F7F7F", "#0072B2", "#D55E00", "#009E73"];   // Okabe-Ito; headline muted
 export const colorOf = (m) => COLORS[MEASURES.indexOf(m)];
@@ -16,3 +17,15 @@ export const SAMPLES = new Map([["1970–2024", "long"], ["1970–1989", "80s"],
 
 export const pct = (x) => (x == null || Number.isNaN(x) ? "–" : `${x.toFixed(1)}%`);
 export const monthLabel = (d) => d.toLocaleDateString("en-US", {month: "long", year: "numeric", timeZone: "UTC"});
+
+// Horizon selector shared across pages: remembers the visitor's choice for the
+// session (the Shiny app had one global lever), falls back to 12-month.
+export function horizonInput() {
+  let init = "12m";
+  try { init = sessionStorage.getItem("rrm-horizon") ?? "12m"; } catch {}
+  if (!["1m", "3m", "12m"].includes(init)) init = "12m";
+  const input = Inputs.radio(HORIZONS, {label: "Horizon", value: init});
+  input.addEventListener("input", () => { try { sessionStorage.setItem("rrm-horizon", input.value); } catch {} });
+  return input;
+}
+export const changeLabel = (h) => (h === "12m" ? "12-month change" : `${h === "1m" ? "1" : "3"}-month change, annualized`);

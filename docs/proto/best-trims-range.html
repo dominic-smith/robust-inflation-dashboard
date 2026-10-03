@@ -5,17 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="generator" content="Observable Framework v1.13.4">
 <title>Best-trims range | Robust Measures of Inflation</title>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
+
 <link rel="preload" as="style" href="./_observablehq/theme-air.d5b7fcbe.css">
 <link rel="preload" as="style" href="./_observablehq/stdlib/inputs.f7bf0e12.css">
-<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
 <link rel="stylesheet" type="text/css" href="./_observablehq/theme-air.d5b7fcbe.css">
 <link rel="stylesheet" type="text/css" href="./_observablehq/stdlib/inputs.f7bf0e12.css">
 <link rel="modulepreload" href="./_observablehq/client.ce6ccea5.js">
 <link rel="modulepreload" href="./_observablehq/runtime.fa9f71c0.js">
 <link rel="modulepreload" href="./_observablehq/stdlib.c4209144.js">
-<link rel="modulepreload" href="./_import/components/style.1a10a6df.js">
+<link rel="modulepreload" href="./_import/components/style.c688cee4.js">
 <link rel="modulepreload" href="./_npm/d3@7.9.0/080cf928.js">
 <link rel="modulepreload" href="./_observablehq/stdlib/inputs.0cc910eb.js">
 <link rel="modulepreload" href="./_npm/@observablehq/plot@0.6.17/93ce672e.js">
@@ -56,16 +54,22 @@
 <link rel="modulepreload" href="./_npm/delaunator@5.1.0/7b06abe7.js">
 <link rel="modulepreload" href="./_npm/binary-search-bounds@2.0.5/5f640032.js">
 <link rel="modulepreload" href="./_npm/robust-predicates@3.0.3/b42f30a7.js">
+<style>
+@font-face { font-family: "Source Serif 4"; font-style: normal; font-weight: 200 900; font-display: swap;
+  src: url("./fonts/source-serif-4-latin-wght-normal.woff2") format("woff2"); }
+@font-face { font-family: "Source Serif 4"; font-style: italic; font-weight: 200 900; font-display: swap;
+  src: url("./fonts/source-serif-4-latin-wght-italic.woff2") format("woff2"); }
+</style>
 <script type="module">
 
 import {define} from "./_observablehq/client.ce6ccea5.js";
 import {registerFile} from "./_observablehq/stdlib.c4209144.js";
 
-registerFile("./data/band.csv", {"name":"./data/band.csv","mimeType":"text/csv","path":"./_file/data/band.e369969e.csv","lastModified":1791023408010,"size":479524});
-registerFile("./data/series.csv", {"name":"./data/series.csv","mimeType":"text/csv","path":"./_file/data/series.634c2672.csv","lastModified":1791023408214,"size":396380});
+registerFile("./data/band.csv", {"name":"./data/band.csv","mimeType":"text/csv","path":"./_file/data/band.9ecacc82.csv","lastModified":1791029082226,"size":565979});
+registerFile("./data/series.csv", {"name":"./data/series.csv","mimeType":"text/csv","path":"./_file/data/series.ce3ac8a9.csv","lastModified":1791029082442,"size":425204});
 
 define({id: "67c50c22", inputs: ["FileAttachment"], outputs: ["MEASURES","colorOf","TARGETS","SAMPLES","pct","monthLabel","band","series"], body: async (FileAttachment) => {
-const {MEASURES, colorOf, TARGETS, SAMPLES, pct, monthLabel} = await import("./_import/components/style.1a10a6df.js");
+const {MEASURES, colorOf, TARGETS, SAMPLES, pct, monthLabel} = await import("./_import/components/style.c688cee4.js");
 const band = FileAttachment("./data/band.csv").csv({typed: true});
 const series = FileAttachment("./data/series.csv").csv({typed: true});
 return {MEASURES,colorOf,TARGETS,SAMPLES,pct,monthLabel,band,series};
@@ -175,6 +179,10 @@ resize((width) => Plot.plot({
   <ol>
     <li class="observablehq-link"><a href="./">Latest reading</a></li>
     <li class="observablehq-link observablehq-link-active"><a href="./best-trims-range">Best-trims range</a></li>
+    <li class="observablehq-link"><a href="./measure-disagreement">Measure disagreement</a></li>
+    <li class="observablehq-link"><a href="./distribution">Distribution</a></li>
+    <li class="observablehq-link"><a href="./robustness">Robustness</a></li>
+    <li class="observablehq-link"><a href="./download">Download &amp; methods</a></li>
   </ol>
 </nav>
 <script>{const e=document.querySelector("#observablehq-sidebar"),o=document.querySelector("#observablehq-sidebar-toggle"),r=sessionStorage.getItem("observablehq-sidebar");r?o.checked=r==="true":o.indeterminate=!0;for(const t of document.querySelectorAll("#observablehq-sidebar summary")){const s=t.parentElement;switch(sessionStorage.getItem(`observablehq-sidebar:${t.textContent}`)){case"true":s.open=!0;break;case"false":s.classList.contains("observablehq-section-active")||(s.open=!1);break}}addEventListener("beforeunload",()=>sessionStorage.setItem("observablehq-sidebar-scrolly",`${e.scrollTop}`));const a=sessionStorage.getItem("observablehq-sidebar-scrolly");a!=null&&(e.style.cssText="overflow: hidden;",e.scrollTop=+a,e.style.cssText="");}</script>
@@ -195,7 +203,7 @@ resize((width) => Plot.plot({
 <p class="muted">Which trims are statistically equivalent is fixed from the paper's evaluation; each trim is recomputed on every month's data. Band and lines are 12-month changes. Dashed line: 2% target.</p>
 </main>
 <footer id="observablehq-footer">
-<div>Ocampo, Schoenle &amp; Smith, “Robustness of Robust Measures of Inflation.” Computed from BEA underlying PCE detail (current vintage). Prototype.</div>
+<div>Ocampo, Schoenle &amp; Smith, “Robustness of Robust Measures of Inflation.” Computed from BEA underlying PCE detail (current vintage).</div>
 </footer>
 </div>
 </body>

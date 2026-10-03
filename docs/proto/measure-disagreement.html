@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="generator" content="Observable Framework v1.13.4">
-<title>Latest reading | Robust Measures of Inflation</title>
+<title>Measure disagreement | Robust Measures of Inflation</title>
 
 <link rel="preload" as="style" href="./_observablehq/theme-air.d5b7fcbe.css">
 <link rel="preload" as="style" href="./_observablehq/stdlib/inputs.f7bf0e12.css">
@@ -15,10 +15,10 @@
 <link rel="modulepreload" href="./_observablehq/stdlib.c4209144.js">
 <link rel="modulepreload" href="./_import/components/style.c688cee4.js">
 <link rel="modulepreload" href="./_npm/d3@7.9.0/080cf928.js">
-<link rel="modulepreload" href="./_npm/htl@1.0.0/11521f02.js">
 <link rel="modulepreload" href="./_observablehq/stdlib/inputs.0cc910eb.js">
 <link rel="modulepreload" href="./_npm/@observablehq/plot@0.6.17/93ce672e.js">
 <link rel="modulepreload" href="./_npm/d3-dsv@3.0.1/097745a2.js">
+<link rel="modulepreload" href="./_npm/htl@1.0.0/11521f02.js">
 <link rel="modulepreload" href="./_npm/isoformat@0.2.1/604cb63b.js">
 <link rel="modulepreload" href="./_npm/d3-array@3.2.4/b8e751b6.js">
 <link rel="modulepreload" href="./_npm/d3-axis@3.0.0/c662ea05.js">
@@ -65,12 +65,14 @@
 import {define} from "./_observablehq/client.ce6ccea5.js";
 import {registerFile} from "./_observablehq/stdlib.c4209144.js";
 
-registerFile("./data/series.csv", {"name":"./data/series.csv","mimeType":"text/csv","path":"./_file/data/series.ce3ac8a9.csv","lastModified":1791029082442,"size":425204});
+registerFile("./data/disagreement-summary.json", {"name":"./data/disagreement-summary.json","mimeType":"application/json","path":"./_file/data/disagreement-summary.d784f4d2.json","lastModified":1791029083939,"size":337});
+registerFile("./data/disagreement.csv", {"name":"./data/disagreement.csv","mimeType":"text/csv","path":"./_file/data/disagreement.8f97a321.csv","lastModified":1791029083721,"size":130343});
 
-define({id: "be0a1617", inputs: ["FileAttachment"], outputs: ["MEASURES","COLORS","colorOf","horizonInput","horizonLabel","pct","monthLabel","series"], body: async (FileAttachment) => {
-const {MEASURES, COLORS, colorOf, horizonInput, horizonLabel, pct, monthLabel} = await import("./_import/components/style.c688cee4.js");
-const series = FileAttachment("./data/series.csv").csv({typed: true});
-return {MEASURES,COLORS,colorOf,horizonInput,horizonLabel,pct,monthLabel,series};
+define({id: "264cea15", inputs: ["FileAttachment"], outputs: ["colorOf","horizonInput","changeLabel","monthLabel","dis","summary"], body: async (FileAttachment) => {
+const {colorOf, horizonInput, changeLabel, monthLabel} = await import("./_import/components/style.c688cee4.js");
+const dis = FileAttachment("./data/disagreement.csv").csv({typed: true});
+const summary = FileAttachment("./data/disagreement-summary.json").json();
+return {colorOf,horizonInput,changeLabel,monthLabel,dis,summary};
 }});
 
 define({id: "9728895a", inputs: ["view","horizonInput"], outputs: ["horizon"], body: (view,horizonInput) => {
@@ -78,61 +80,67 @@ const horizon = view(horizonInput());
 return {horizon};
 }});
 
-define({id: "0078241b", inputs: ["series","horizon","d3"], outputs: ["sh","maxDate","latest"], body: (series,horizon,d3) => {
-const sh = series.filter((d) => d.horizon === horizon);
-const maxDate = d3.max(sh, (d) => d.date);
-const latest = new Map(sh.filter((d) => +d.date === +maxDate).map((d) => [d.measure, d.value]));
-return {sh,maxDate,latest};
+define({id: "6233dba9", inputs: ["summary","horizon","dis"], outputs: ["s","d","spread"], body: (summary,horizon,dis) => {
+const s = summary.find((d) => d.horizon === horizon);
+const d = dis.filter((r) => r.horizon === horizon);
+const spread = (v) => (v == null ? "–" : v.toFixed(1));
+return {s,d,spread};
 }});
 
-define({id: "8f510e30", mode: "inline", inputs: ["monthLabel","maxDate","display"], body: async (monthLabel,maxDate,display) => {
+define({id: "6705f56e", mode: "inline", inputs: ["spread","s","display"], body: async (spread,s,display) => {
 display(await(
-monthLabel(maxDate)
+spread(s.latest)
 ))
 }});
 
-define({id: "8c6d3d1d", mode: "inline", inputs: ["MEASURES","html","colorOf","pct","latest","display"], body: async (MEASURES,html,colorOf,pct,latest,display) => {
+define({id: "5e4f7859", mode: "inline", inputs: ["monthLabel","s","display"], body: async (monthLabel,s,display) => {
 display(await(
-MEASURES.map((m) => html`<div class="card">
-    <h2>${m}</h2>
-    <span class="big" style="color: ${colorOf(m)}">${pct(latest.get(m))}</span>
-  </div>`)
+monthLabel(new Date(s.latest_date))
 ))
 }});
 
-define({id: "cbc4d80d", inputs: ["view","Inputs","MEASURES"], outputs: ["years","shown"], body: (view,Inputs,MEASURES) => {
-const years = view(Inputs.radio(new Map([["Last 3 years", 3], ["Last 5 years", 5], ["Last 10 years", 10], ["Full history", 0]]), {label: "Time window", value: 5}));
-const shown = view(Inputs.checkbox(MEASURES, {label: "Measures", value: MEASURES}));
-return {years,shown};
+define({id: "6f20df19", mode: "inline", inputs: ["spread","s","display"], body: async (spread,s,display) => {
+display(await(
+spread(s.average)
+))
 }});
 
-define({id: "af44c0ad", inputs: ["years","d3","maxDate","sh","shown","monthLabel","MEASURES"], outputs: ["cutoff","plotData","byDate"], body: (years,d3,maxDate,sh,shown,monthLabel,MEASURES) => {
-const cutoff = years ? d3.utcYear.offset(maxDate, -years) : d3.min(sh, (d) => d.date);
-const plotData = sh.filter((d) => d.date >= cutoff && shown.includes(d.measure));
-// one tooltip row per month, listing every visible measure
-const byDate = d3.groups(plotData, (d) => +d.date).map(([t, rows]) => ({
-  date: new Date(t),
-  top: d3.max(rows, (r) => r.value),
-  text: [monthLabel(new Date(t)), ...MEASURES.filter((m) => rows.some((r) => r.measure === m))
-    .map((m) => `${m}: ${rows.find((r) => r.measure === m).value.toFixed(2)}%`)].join("\n")
-}));
-return {cutoff,plotData,byDate};
+define({id: "17805a95", mode: "inline", inputs: ["spread","s","display"], body: async (spread,s,display) => {
+display(await(
+spread(s.low)
+))
 }});
 
-define({id: "f357e1ac", mode: "inline", inputs: ["resize","Plot","horizonLabel","horizon","MEASURES","COLORS","plotData","byDate","display"], body: async (resize,Plot,horizonLabel,horizon,MEASURES,COLORS,plotData,byDate,display) => {
+define({id: "ea1fff4c", mode: "inline", inputs: ["spread","s","display"], body: async (spread,s,display) => {
+display(await(
+spread(s.high)
+))
+}});
+
+define({id: "661e233c", inputs: ["view","Inputs"], outputs: ["years"], body: (view,Inputs) => {
+const years = view(Inputs.radio(new Map([["Last 5 years", 5], ["Last 10 years", 10], ["Full history", 0]]), {label: "Time window", value: 10}));
+return {years};
+}});
+
+define({id: "1085be9e", inputs: ["d3","d","years"], outputs: ["end","w"], body: (d3,d,years) => {
+const end = d3.max(d, (r) => r.date);
+const w = d.filter((r) => !years || r.date >= d3.utcYear.offset(end, -years));
+return {end,w};
+}});
+
+define({id: "7df7a11b", mode: "inline", inputs: ["resize","Plot","changeLabel","horizon","colorOf","w","monthLabel","display"], body: async (resize,Plot,changeLabel,horizon,colorOf,w,monthLabel,display) => {
 display(await(
 resize((width) => Plot.plot({
-  width,
-  height: 420,
-  marginLeft: 45,
-  y: {grid: true, label: horizonLabel(horizon) + " (%)", tickFormat: (d) => `${d}%`},
+  width, height: 420, marginLeft: 45,
+  y: {grid: true, label: changeLabel(horizon) + " (%)", tickFormat: (v) => `${v}%`},
   x: {label: null},
-  color: {domain: MEASURES, range: COLORS, legend: true},
+  color: {legend: true, domain: ["Range of robust measures", "Headline PCE"], range: ["#bdbdbd", colorOf("Headline PCE")]},
   marks: [
+    Plot.areaY(w, {x: "date", y1: "lo", y2: "hi", fill: "#bdbdbd", fillOpacity: 0.7}),
     Plot.ruleY([2], {stroke: "#bbb", strokeDasharray: "4,3"}),
-    Plot.lineY(plotData, {x: "date", y: "value", stroke: "measure", strokeWidth: 1.8}),
-    Plot.ruleX(byDate, Plot.pointerX({x: "date", stroke: "#999", strokeOpacity: 0.7})),
-    Plot.tip(byDate, Plot.pointerX({x: "date", y: "top", title: "text"}))
+    Plot.lineY(w, {x: "date", y: "headline", stroke: colorOf("Headline PCE"), strokeWidth: 1.6}),
+    Plot.ruleX(w, Plot.pointerX({x: "date", stroke: "#999", strokeOpacity: 0.7})),
+    Plot.tip(w, Plot.pointerX({x: "date", y: "hi", title: (r) => `${monthLabel(r.date)}\nRobust measures: ${r.lo.toFixed(2)}–${r.hi.toFixed(2)}% (spread ${r.diff.toFixed(2)} pp)\nHeadline PCE: ${r.headline?.toFixed(2)}%`}))
   ]
 }))
 ))
@@ -146,12 +154,12 @@ resize((width) => Plot.plot({
 <nav id="observablehq-sidebar">
   <ol>
     <label id="observablehq-sidebar-close" for="observablehq-sidebar-toggle"></label>
-    <li class="observablehq-link observablehq-link-active"><a href="./">Robust Measures of Inflation</a></li>
+    <li class="observablehq-link"><a href="./">Robust Measures of Inflation</a></li>
   </ol>
   <ol>
-    <li class="observablehq-link observablehq-link-active"><a href="./">Latest reading</a></li>
+    <li class="observablehq-link"><a href="./">Latest reading</a></li>
     <li class="observablehq-link"><a href="./best-trims-range">Best-trims range</a></li>
-    <li class="observablehq-link"><a href="./measure-disagreement">Measure disagreement</a></li>
+    <li class="observablehq-link observablehq-link-active"><a href="./measure-disagreement">Measure disagreement</a></li>
     <li class="observablehq-link"><a href="./distribution">Distribution</a></li>
     <li class="observablehq-link"><a href="./robustness">Robustness</a></li>
     <li class="observablehq-link"><a href="./download">Download &amp; methods</a></li>
@@ -160,18 +168,21 @@ resize((width) => Plot.plot({
 <script>{const e=document.querySelector("#observablehq-sidebar"),o=document.querySelector("#observablehq-sidebar-toggle"),r=sessionStorage.getItem("observablehq-sidebar");r?o.checked=r==="true":o.indeterminate=!0;for(const t of document.querySelectorAll("#observablehq-sidebar summary")){const s=t.parentElement;switch(sessionStorage.getItem(`observablehq-sidebar:${t.textContent}`)){case"true":s.open=!0;break;case"false":s.classList.contains("observablehq-section-active")||(s.open=!1);break}}addEventListener("beforeunload",()=>sessionStorage.setItem("observablehq-sidebar-scrolly",`${e.scrollTop}`));const a=sessionStorage.getItem("observablehq-sidebar-scrolly");a!=null&&(e.style.cssText="overflow: hidden;",e.scrollTop=+a,e.style.cssText="");}</script>
 <div id="observablehq-center">
 <main id="observablehq-main" class="observablehq">
-<div class="observablehq observablehq--block"><!--:be0a1617:--></div>
-<h1 id="what-is-inflation-now" tabindex="-1"><a class="observablehq-header-anchor" href="#what-is-inflation-now">What is inflation now?</a></h1>
+<div class="observablehq observablehq--block"><!--:264cea15:--></div>
+<h1 id="how-much-do-the-measures-disagree" tabindex="-1"><a class="observablehq-header-anchor" href="#how-much-do-the-measures-disagree">How much do the measures disagree?</a></h1>
+<p class="muted">The shaded band is the range spanned by core PCE, the median and the trimmed mean each month — a gauge of how much the choice of measure matters. It widens when inflation is turning.</p>
 <div class="observablehq observablehq--block"><!--:9728895a:--></div>
-<div class="observablehq observablehq--block"><!--:0078241b:--></div>
-<p class="muted">Consumer price inflation, four ways. Data through <observablehq-loading></observablehq-loading><!--:8f510e30:-->. 1-month and 3-month changes are annualized.</p>
+<div class="observablehq observablehq--block"><!--:6233dba9:--></div>
 <div class="grid grid-cols-4">
-  <observablehq-loading></observablehq-loading><!--:8c6d3d1d:-->
+  <div class="card"><h2>Latest</h2><span class="big"><observablehq-loading></observablehq-loading><!--:6705f56e:--></span><p class="muted">pp spread, <observablehq-loading></observablehq-loading><!--:5e4f7859:--></p></div>
+  <div class="card"><h2>Average</h2><span class="big"><observablehq-loading></observablehq-loading><!--:6f20df19:--></span><p class="muted">pp spread, all months</p></div>
+  <div class="card"><h2>Low inflation (&lt;2.5%)</h2><span class="big"><observablehq-loading></observablehq-loading><!--:17805a95:--></span><p class="muted">pp spread</p></div>
+  <div class="card"><h2>High inflation (≥5%)</h2><span class="big"><observablehq-loading></observablehq-loading><!--:ea1fff4c:--></span><p class="muted">pp spread</p></div>
 </div>
-<div class="observablehq observablehq--block"><!--:cbc4d80d:--></div>
-<div class="observablehq observablehq--block"><!--:af44c0ad:--></div>
-<div class="card"><observablehq-loading></observablehq-loading><!--:f357e1ac:--></div>
-<p class="muted">Dashed line: 2% target. Headline and core PCE are BEA aggregates; the median and trimmed mean are computed from the detailed PCE categories using the paper's methodology.</p>
+<div class="observablehq observablehq--block"><!--:661e233c:--></div>
+<div class="observablehq observablehq--block"><!--:1085be9e:--></div>
+<div class="card"><observablehq-loading></observablehq-loading><!--:7df7a11b:--></div>
+<p class="muted">Band = max minus min of core PCE, median PCE and the trimmed mean. Line = headline PCE. Dashed line: 2% target. 1- and 3-month changes are annualized.</p>
 </main>
 <footer id="observablehq-footer">
 <div>Ocampo, Schoenle &amp; Smith, “Robustness of Robust Measures of Inflation.” Computed from BEA underlying PCE detail (current vintage).</div>

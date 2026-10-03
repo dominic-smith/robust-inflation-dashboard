@@ -3,14 +3,14 @@ title: Latest reading
 ---
 
 ```js
-import {MEASURES, COLORS, colorOf, HORIZONS, horizonLabel, pct, monthLabel} from "./components/style.js";
+import {MEASURES, COLORS, colorOf, horizonInput, horizonLabel, pct, monthLabel} from "./components/style.js";
 const series = FileAttachment("data/series.csv").csv({typed: true});
 ```
 
 # What is inflation now?
 
 ```js
-const horizon = view(Inputs.radio(HORIZONS, {label: "Horizon", value: "12m"}));
+const horizon = view(horizonInput());
 ```
 
 ```js

@@ -2,5 +2,5 @@
 here <- dirname(sub("^--file=", "", grep("^--file=", commandArgs(FALSE), value = TRUE)[1]))
 source(file.path(here, "artifacts.R"))
 s <- artifact("series_h.csv")
-s$value <- round(s$value, 3)
+s$value <- round(s$value, 6)
 emit(s[c("date", "measure", "horizon", "value")])
