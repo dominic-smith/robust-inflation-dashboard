@@ -20,7 +20,8 @@ echo "== 3/5  export artifacts (CSV) + pack app data =="
 echo "== 4/5  validate (FRED match, category alignment, Dallas gap) =="
 ( cd compute/code && Rscript validate_refresh.R )
 
-echo "== 5/5  rebuild shinylive static site =="
+echo "== 5/5  build sites (Framework prototype, then shinylive + copy to docs/) =="
+( cd site && npm run build --silent )
 Rscript build.R
 
 echo
