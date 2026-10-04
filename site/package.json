@@ -5,7 +5,8 @@
     "build": "rimraf src/.observablehq/cache && observable build && cp static/_headers dist/_headers",
     "dev": "observable preview",
     "test": "node test/verify.mjs",
-    "clean": "rimraf src/.observablehq/cache dist"
+    "clean": "rimraf src/.observablehq/cache dist",
+    "test:live": "node test/live.mjs"
   },
   "dependencies": {
     "@observablehq/framework": "^1.13.0"
