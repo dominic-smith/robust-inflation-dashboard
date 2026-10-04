@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="generator" content="Observable Framework v1.13.4">
+<title>What&#x27;s driving it | Robust Measures of Inflation</title>
+
+<link rel="preload" as="style" href="./_import/style.af065f40.css">
+<link rel="stylesheet" type="text/css" href="./_import/style.af065f40.css">
+<link rel="modulepreload" href="./_observablehq/client.b5c54e4c.js">
+<link rel="modulepreload" href="./_observablehq/runtime.fa9f71c0.js">
+<link rel="modulepreload" href="./_observablehq/stdlib.c4209144.js">
+<link rel="modulepreload" href="./_npm/@observablehq/plot@0.6.17/93ce672e.js">
+<link rel="modulepreload" href="./_import/components/theme.5e6de32f.js">
+<link rel="modulepreload" href="./_import/components/controls.fdb395c0.js">
+<link rel="modulepreload" href="./_import/components/charts.46f6f381.js">
+<link rel="modulepreload" href="./_npm/htl@1.0.0/11521f02.js">
+<link rel="modulepreload" href="./_npm/d3@7.9.0/080cf928.js">
+<link rel="modulepreload" href="./_npm/d3-dsv@3.0.1/097745a2.js">
+<link rel="modulepreload" href="./_npm/isoformat@0.2.1/604cb63b.js">
+<link rel="modulepreload" href="./_npm/interval-tree-1d@1.0.4/f53f17b2.js">
+<link rel="modulepreload" href="./_npm/d3-array@3.2.4/b8e751b6.js">
+<link rel="modulepreload" href="./_npm/d3-axis@3.0.0/c662ea05.js">
+<link rel="modulepreload" href="./_npm/d3-brush@3.0.0/d162d8c6.js">
+<link rel="modulepreload" href="./_npm/d3-chord@3.0.1/5cedd0be.js">
+<link rel="modulepreload" href="./_npm/d3-color@3.1.0/65d51007.js">
+<link rel="modulepreload" href="./_npm/d3-contour@4.0.2/c576a91a.js">
+<link rel="modulepreload" href="./_npm/d3-delaunay@6.0.4/8b43826d.js">
+<link rel="modulepreload" href="./_npm/d3-dispatch@3.0.1/3fb06f14.js">
+<link rel="modulepreload" href="./_npm/d3-drag@3.0.0/20b76948.js">
+<link rel="modulepreload" href="./_npm/d3-ease@3.0.1/8683b012.js">
+<link rel="modulepreload" href="./_npm/d3-fetch@3.0.1/5c319046.js">
+<link rel="modulepreload" href="./_npm/d3-force@3.0.0/33924f3e.js">
+<link rel="modulepreload" href="./_npm/d3-format@3.1.2/8d67a1ae.js">
+<link rel="modulepreload" href="./_npm/d3-geo@3.1.1/8037bd0b.js">
+<link rel="modulepreload" href="./_npm/d3-hierarchy@3.1.2/a9ba0229.js">
+<link rel="modulepreload" href="./_npm/d3-interpolate@3.0.1/e0a47f97.js">
+<link rel="modulepreload" href="./_npm/d3-path@3.1.0/f9e9e0ab.js">
+<link rel="modulepreload" href="./_npm/d3-polygon@3.0.1/2da8eb3b.js">
+<link rel="modulepreload" href="./_npm/d3-quadtree@3.0.1/09002e01.js">
+<link rel="modulepreload" href="./_npm/d3-random@3.0.1/5108797c.js">
+<link rel="modulepreload" href="./_npm/d3-scale@4.0.2/c9f2571b.js">
+<link rel="modulepreload" href="./_npm/d3-scale-chromatic@3.1.0/f3c78e0d.js">
+<link rel="modulepreload" href="./_npm/d3-selection@3.0.0/28717d05.js">
+<link rel="modulepreload" href="./_npm/d3-shape@3.2.0/7c6e2a50.js">
+<link rel="modulepreload" href="./_npm/d3-time@3.1.0/3d1d57c6.js">
+<link rel="modulepreload" href="./_npm/d3-time-format@4.1.0/643581a8.js">
+<link rel="modulepreload" href="./_npm/d3-timer@3.0.1/e99232db.js">
+<link rel="modulepreload" href="./_npm/d3-transition@3.0.1/bd07fd9a.js">
+<link rel="modulepreload" href="./_npm/d3-zoom@3.0.0/d09f7cc9.js">
+<link rel="modulepreload" href="./_npm/binary-search-bounds@2.0.5/5f640032.js">
+<link rel="modulepreload" href="./_npm/internmap@2.0.3/af036d7e.js">
+<link rel="modulepreload" href="./_npm/delaunator@5.1.0/7b06abe7.js">
+<link rel="modulepreload" href="./_npm/robust-predicates@3.0.3/b42f30a7.js">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%253D%22http%253A%252F%252Fwww.w3.org%252F2000%252Fsvg%22%20viewBox%253D%220%200%2016%2016%22%3E%3Crect%20x%253D%221%22%20y%253D%228%22%20width%253D%223.5%22%20height%253D%227%22%20rx%253D%221%22%20fill%253D%22%2523898781%22%252F%3E%3Crect%20x%253D%226.25%22%20y%253D%223%22%20width%253D%223.5%22%20height%253D%2212%22%20rx%253D%221%22%20fill%253D%22%25232a78d6%22%252F%3E%3Crect%20x%253D%2211.5%22%20y%253D%226%22%20width%253D%223.5%22%20height%253D%229%22%20rx%253D%221%22%20fill%253D%22%25232a78d6%22%252F%3E%3C%252Fsvg%3E">
+<meta name="description" content="Robust measures of US inflation (trimmed-mean and median PCE) and the range of underlying inflation supported by the best trims, updated monthly from BEA data.">
+<meta name="robots" content="noindex">
+<script type="module">
+
+import {define} from "./_observablehq/client.b5c54e4c.js";
+import {registerFile} from "./_observablehq/stdlib.c4209144.js";
+
+registerFile("./data/drivers.json", {"name":"./data/drivers.json","mimeType":"application/json","path":"./_file/data/drivers.0d6bb408.json","lastModified":1791082380198,"size":10036});
+registerFile("./data/percentiles/12m.csv", {"name":"./data/percentiles/12m.csv","mimeType":"text/csv","path":"./_file/data/percentiles/12m.934d5538.csv","lastModified":1791082380423,"size":46667});
+registerFile("./data/percentiles/1m.csv", {"name":"./data/percentiles/1m.csv","mimeType":"text/csv","path":"./_file/data/percentiles/1m.267e82f2.csv","lastModified":1791082380850,"size":47249});
+registerFile("./data/percentiles/3m.csv", {"name":"./data/percentiles/3m.csv","mimeType":"text/csv","path":"./_file/data/percentiles/3m.6ef8cd74.csv","lastModified":1791082380635,"size":47239});
+
+define({id: "ebd2dda4", inputs: ["FileAttachment"], outputs: ["Plot","palette","fmt","HORIZONS","horizonText","monthsBefore","segmented","timeChart","legend","contributionTable","tableView","plotStyle","drivers","pctFiles"], body: async (FileAttachment) => {
+const [Plot, {palette, fmt, HORIZONS, horizonText, monthsBefore}, {segmented}, {timeChart, legend, contributionTable, tableView, plotStyle}] = await Promise.all([import("./_npm/@observablehq/plot@0.6.17/93ce672e.js"), import("./_import/components/theme.5e6de32f.js"), import("./_import/components/controls.fdb395c0.js"), import("./_import/components/charts.46f6f381.js")]);
+const drivers = FileAttachment("./data/drivers.json").json();
+const pctFiles = {"12m": FileAttachment("./data/percentiles/12m.csv"), "3m": FileAttachment("./data/percentiles/3m.csv"), "1m": FileAttachment("./data/percentiles/1m.csv")};
+return {Plot,palette,fmt,HORIZONS,horizonText,monthsBefore,segmented,timeChart,legend,contributionTable,tableView,plotStyle,drivers,pctFiles};
+}});
+
+define({id: "9170aaea", inputs: ["segmented","HORIZONS","display","html","Generators"], outputs: ["horizonInput","horizon"], body: (segmented,HORIZONS,display,html,Generators) => {
+const horizonInput = segmented(HORIZONS, {label: "Change over", value: "12m", key: "rrm-horizon"});
+display(html`<div class="controls">${horizonInput}</div>`);
+const horizon = Generators.input(horizonInput);
+return {horizonInput,horizon};
+}});
+
+define({id: "3596b853", inputs: ["palette","dark","drivers","horizon"], outputs: ["c","d","month","M","markers","binLabel"], body: (palette,dark,drivers,horizon) => {
+const c = palette(dark);
+const d = drivers.find((r) => r.horizon === horizon);
+const month = new Date(d.month);
+const M = d.markers;
+const markers = [
+  {label: "Headline PCE", value: M["Headline PCE"], color: c.series["Headline PCE"]},
+  {label: "Median PCE", value: M["Median PCE"], color: c.series["Median PCE"]},
+  {label: "Trimmed-mean PCE", value: M["Trimmed-mean PCE"], color: c.series["Trimmed-mean PCE"]}
+];
+const binLabel = (b) => `${(b.x - 0.5).toFixed(0)}% to ${(b.x + 0.5).toFixed(0)}%`;
+return {c,d,month,M,markers,binLabel};
+}});
+
+define({id: "8d74c43b", mode: "inline", inputs: ["fmt","month","display"], body: async (fmt,month,display) => {
+display(await(
+fmt.month(month)
+))
+}});
+
+define({id: "911f83da", mode: "inline", inputs: ["horizonText","horizon","display"], body: async (horizonText,horizon,display) => {
+display(await(
+horizonText[horizon]
+))
+}});
+
+define({id: "93f408d7", mode: "inline", inputs: ["legend","c","markers","fmt","display"], body: async (legend,c,markers,fmt,display) => {
+display(await(
+legend([
+    {label: "Kept by the trimmed mean", kind: "area", color: c.series["Trimmed-mean PCE"]},
+    {label: "Set aside", kind: "area", color: c.muted},
+    ...markers.map((m) => ({label: `${m.label} ${fmt.pct(m.value)}`, kind: "line", color: m.color}))
+  ])
+))
+}});
+
+define({id: "ddac5d2f", mode: "inline", inputs: ["resize","Plot","plotStyle","c","horizonText","horizon","d","markers","binLabel","display"], body: async (resize,Plot,plotStyle,c,horizonText,horizon,d,markers,binLabel,display) => {
+display(await(
+resize((width) => Plot.plot({
+    width, height: 330, marginLeft: 44, marginBottom: 34, marginTop: 10,
+    style: plotStyle(c),
+    x: {domain: [-12, 18], label: `${horizonText[horizon]} by category (%)`, labelAnchor: "center", labelArrow: "none", tickFormat: (v) => `${v}%`},
+    y: {grid: true, label: null, tickFormat: (v) => `${Math.round(100 * v)}%`},
+    marks: [
+      Plot.rectY(d.bins, {x1: (b) => b.x - 0.5, x2: (b) => b.x + 0.5, y: "w", insetLeft: 1, insetRight: 1, clip: true,
+        fill: (b) => (b.kept ? c.series["Trimmed-mean PCE"] : c.muted), fillOpacity: 0.35}),   // washes, so the marker lines stay visible
+      Plot.ruleY([0], {stroke: c.axis}),
+      ...markers.filter((m) => m.value != null).map((m) => Plot.ruleX([m.value], {stroke: m.color, strokeWidth: 2, clip: true})),
+      Plot.tip(d.bins, Plot.pointerX({x: "x", y: "w", title: (b) => `${(100 * b.w).toFixed(1)}% of spending\n${binLabel(b)}, ${b.kept ? "kept" : "set aside"}`,
+        fill: c.surface, stroke: c.axis, textPadding: 8}))
+    ]
+  }))
+))
+}});
+
+define({id: "d438c5c6", mode: "inline", inputs: ["tableView","binLabel","d","display"], body: async (tableView,binLabel,d,display) => {
+display(await(
+tableView([
+    {label: "Price change", value: binLabel},
+    {label: "Share of spending", num: true, value: (b) => `${(100 * b.w).toFixed(1)}%`},
+    {label: "Trimmed mean", value: (b) => (b.kept ? "kept" : "set aside")}
+  ], d.bins)
+))
+}});
+
+define({id: "218e121b", mode: "inline", inputs: ["d","display"], body: async (d,display) => {
+display(await(
+d.n_high
+))
+}});
+
+define({id: "7b73106c", mode: "inline", inputs: ["d","display"], body: async (d,display) => {
+display(await(
+d.n_low
+))
+}});
+
+define({id: "3e808d18", mode: "inline", inputs: ["d","display"], body: async (d,display) => {
+display(await(
+d.n
+))
+}});
+
+define({id: "39f2628a", mode: "inline", inputs: ["contributionTable","d","display"], body: async (contributionTable,d,display) => {
+display(await(
+contributionTable(d.high_tail)
+))
+}});
+
+define({id: "057c6c16", mode: "inline", inputs: ["contributionTable","d","display"], body: async (contributionTable,d,display) => {
+display(await(
+contributionTable(d.low_tail)
+))
+}});
+
+define({id: "04cf1a71", inputs: ["segmented","display","html","Generators"], outputs: ["spanInput","span"], body: (segmented,display,html,Generators) => {
+const spanInput = segmented(new Map([["10 years", "10"], ["Since 1990", "1990"], ["Since 1960", "0"]]), {label: "Show", value: "10"});
+display(html`<div class="controls">${spanInput}</div>`);
+const span = Generators.input(spanInput);
+return {spanInput,span};
+}});
+
+define({id: "3e8957fd", inputs: ["pctFiles","horizon"], outputs: ["pcts"], body: (pctFiles,horizon) => {
+const pcts = pctFiles[horizon].csv({typed: true});
+return {pcts};
+}});
+
+define({id: "156fa50c", inputs: ["pcts","span","monthsBefore"], outputs: ["pEnd","pStart","pw","col"], body: (pcts,span,monthsBefore) => {
+const pEnd = pcts.at(-1).date;
+const pStart = span === "10" ? monthsBefore(pEnd, 120) : span === "1990" ? new Date(Date.UTC(1990, 0, 1)) : pcts[0].date;
+const pw = pcts.filter((r) => r.date >= pStart);
+const col = (q) => pw.map((r) => ({date: r.date, value: r[q]}));
+return {pEnd,pStart,pw,col};
+}});
+
+define({id: "160d8d45", mode: "inline", inputs: ["horizonText","horizon","display"], body: async (horizonText,horizon,display) => {
+display(await(
+horizonText[horizon][0].toUpperCase() + horizonText[horizon].slice(1)
+))
+}});
+
+define({id: "556413b0", mode: "inline", inputs: ["resize","timeChart","c","pw","col","display"], body: async (resize,timeChart,c,pw,col,display) => {
+display(await(
+resize((width) => timeChart({c, width, height: 360,
+    band: {label: "24th–69th percentile", color: c.series["Trimmed-mean PCE"], rows: pw.map((r) => ({date: r.date, lo: r.p24, hi: r.p69})), opacity: 0.14},
+    lines: [
+      {label: "90th percentile", color: c.muted, rows: col("p90"), strokeWidth: 1.5},
+      {label: "50th percentile", color: c.series["Median PCE"], rows: col("p50")},
+      {label: "10th percentile", color: c.muted, rows: col("p10"), strokeWidth: 1.5}
+    ],
+    keys: [
+      {label: "24th–69th percentile (kept by the trimmed mean)", kind: "area", color: c.series["Trimmed-mean PCE"]},
+      {label: "50th percentile (median)", kind: "line", color: c.series["Median PCE"]},
+      {label: "10th and 90th percentiles", kind: "line", color: c.muted}
+    ]}))
+))
+}});
+
+define({id: "f9cbd7f6", mode: "inline", inputs: ["tableView","fmt","pw","display"], body: async (tableView,fmt,pw,display) => {
+display(await(
+tableView([
+    {label: "Month", value: (r) => fmt.ym(r.date)},
+    ...["p10", "p24", "p50", "p69", "p90"].map((q) => ({label: `${q.slice(1)}th`, num: true, value: (r) => r[q].toFixed(2)}))
+  ], [...pw].reverse())
+))
+}});
+
+</script>
+</head>
+<body>
+<input id="observablehq-sidebar-toggle" type="checkbox" title="Toggle sidebar">
+<label id="observablehq-sidebar-backdrop" for="observablehq-sidebar-toggle"></label>
+<nav id="observablehq-sidebar">
+  <ol>
+    <label id="observablehq-sidebar-close" for="observablehq-sidebar-toggle"></label>
+    <li class="observablehq-link"><a href="./">Robust Measures of Inflation</a></li>
+  </ol>
+  <ol>
+    <li class="observablehq-link"><a href="./">Overview</a></li>
+    <li class="observablehq-link"><a href="./trend-range">Underlying inflation range</a></li>
+    <li class="observablehq-link"><a href="./measures">The four measures</a></li>
+    <li class="observablehq-link observablehq-link-active"><a href="./drivers">What&#x27;s driving it</a></li>
+    <li class="observablehq-link"><a href="./agreement">Do the measures agree?</a></li>
+    <li class="observablehq-link"><a href="./robustness">Why trimmed means are robust</a></li>
+    <li class="observablehq-link"><a href="./data">Data and methods</a></li>
+  </ol>
+</nav>
+<script>{const e=document.querySelector("#observablehq-sidebar"),o=document.querySelector("#observablehq-sidebar-toggle"),r=sessionStorage.getItem("observablehq-sidebar");r?o.checked=r==="true":o.indeterminate=!0;for(const t of document.querySelectorAll("#observablehq-sidebar summary")){const s=t.parentElement;switch(sessionStorage.getItem(`observablehq-sidebar:${t.textContent}`)){case"true":s.open=!0;break;case"false":s.classList.contains("observablehq-section-active")||(s.open=!1);break}}addEventListener("beforeunload",()=>sessionStorage.setItem("observablehq-sidebar-scrolly",`${e.scrollTop}`));const a=sessionStorage.getItem("observablehq-sidebar-scrolly");a!=null&&(e.style.cssText="overflow: hidden;",e.scrollTop=+a,e.style.cssText="");}</script>
+<div id="observablehq-center">
+<header id="observablehq-header">
+<div class="vintage"><span>Data through <b>August 2026</b></span><span>Updated October 3, 2026</span></div>
+</header>
+<main id="observablehq-main" class="observablehq">
+<div class="observablehq observablehq--block"><!--:ebd2dda4:--></div>
+<p class="eyebrow">Drivers</p>
+<h1 id="whats-driving-inflation-this-month" tabindex="-1"><a class="observablehq-header-anchor" href="#whats-driving-inflation-this-month">What's driving inflation this month?</a></h1>
+<p class="lede">Every month, roughly 180 categories of consumer spending each have their own price change. Headline inflation averages all of them. The trimmed mean sets aside the most extreme changes at both ends and averages the rest, so one volatile category, gasoline for example, cannot swing the measure.</p>
+<div class="observablehq observablehq--block"><!--:9170aaea:--></div>
+<div class="observablehq observablehq--block"><!--:3596b853:--></div>
+<div class="card">
+  <h3>Price changes across categories, <observablehq-loading></observablehq-loading><!--:8d74c43b:--></h3>
+  <p class="sub">Share of consumer spending in each 1-point range of price change (<observablehq-loading></observablehq-loading><!--:911f83da:-->). Blue bars are what the trimmed mean averages; grey bars are the extremes it sets aside: the lowest-changing 24% and highest-changing 31% of spending. A few categories lie beyond the range shown. Lines mark where each measure lands.</p>
+  <observablehq-loading></observablehq-loading><!--:93f408d7:-->
+  <observablehq-loading></observablehq-loading><!--:ddac5d2f:-->
+  <observablehq-loading></observablehq-loading><!--:d438c5c6:-->
+</div>
+<h2 id="what-the-trimmed-mean-sets-aside" tabindex="-1"><a class="observablehq-header-anchor" href="#what-the-trimmed-mean-sets-aside">What the trimmed mean sets aside</a></h2>
+<p class="muted">The extreme categories this month, ranked by their approximate pull on headline inflation (share of spending × price change). <observablehq-loading></observablehq-loading><!--:218e121b:--> categories are set aside at the top and <observablehq-loading></observablehq-loading><!--:7b73106c:--> at the bottom, out of <observablehq-loading></observablehq-loading><!--:3e808d18:-->.</p>
+<div class="card"><h3>Set aside at the top: the largest price increases</h3><observablehq-loading></observablehq-loading><!--:39f2628a:--></div>
+<div class="card"><h3>Set aside at the bottom: the smallest increases and the declines</h3><observablehq-loading></observablehq-loading><!--:057c6c16:--></div>
+<h2 id="the-spread-of-price-changes-over-time" tabindex="-1"><a class="observablehq-header-anchor" href="#the-spread-of-price-changes-over-time">The spread of price changes over time</a></h2>
+<div class="observablehq observablehq--block"><!--:04cf1a71:--></div>
+<div class="observablehq observablehq--block"><!--:3e8957fd:--></div>
+<div class="observablehq observablehq--block"><!--:156fa50c:--></div>
+<div class="card">
+  <h3>Percentiles of category price changes</h3>
+  <p class="sub"><observablehq-loading></observablehq-loading><!--:160d8d45:-->, weighted by spending (the paper's Figure 2). The shaded band, from the 24th to the 69th percentile, is the slice the trimmed mean averages; the 50th percentile is the median.</p>
+  <observablehq-loading></observablehq-loading><!--:556413b0:-->
+  <observablehq-loading></observablehq-loading><!--:f9cbd7f6:-->
+</div>
+</main>
+<footer id="observablehq-footer">
+<div>Ocampo, Schoenle and Smith, “Robustness of Robust Measures of Inflation,” <i>International Journal of Central Banking</i>, forthcoming. Computed from BEA's detailed PCE data; an independent research companion, not an official statistic.</div>
+</footer>
+</div>
+</body>
+</html>

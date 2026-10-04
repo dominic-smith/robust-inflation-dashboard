@@ -1,28 +1,200 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Shiny App</title>
-    <script
-      src="./shinylive/load-shinylive-sw.js"
-      type="module"
-    ></script>
-    <script type="module">
-      import { runExportedApp } from "./shinylive/shinylive.js";
-      runExportedApp({
-        id: "root",
-        appEngine: "r",
-        relPath: "",
-      });
-    </script>
-    <link rel="stylesheet" href="./shinylive/style-resets.css" />
-    <link rel="stylesheet" href="./shinylive/shinylive.css" />
-    
-  </head>
-  <body>
-    
-    <div style="height: 100vh; width: 100vw" id="root"></div>
-    
-  </body>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="generator" content="Observable Framework v1.13.4">
+<title>Overview | Robust Measures of Inflation</title>
+
+<link rel="preload" as="style" href="./_import/style.af065f40.css">
+<link rel="stylesheet" type="text/css" href="./_import/style.af065f40.css">
+<link rel="modulepreload" href="./_observablehq/client.b5c54e4c.js">
+<link rel="modulepreload" href="./_observablehq/runtime.fa9f71c0.js">
+<link rel="modulepreload" href="./_observablehq/stdlib.c4209144.js">
+<link rel="modulepreload" href="./_import/components/theme.5e6de32f.js">
+<link rel="modulepreload" href="./_import/components/charts.46f6f381.js">
+<link rel="modulepreload" href="./_npm/@observablehq/plot@0.6.17/93ce672e.js">
+<link rel="modulepreload" href="./_npm/d3@7.9.0/080cf928.js">
+<link rel="modulepreload" href="./_npm/htl@1.0.0/11521f02.js">
+<link rel="modulepreload" href="./_npm/isoformat@0.2.1/604cb63b.js">
+<link rel="modulepreload" href="./_npm/interval-tree-1d@1.0.4/f53f17b2.js">
+<link rel="modulepreload" href="./_npm/d3-array@3.2.4/b8e751b6.js">
+<link rel="modulepreload" href="./_npm/d3-axis@3.0.0/c662ea05.js">
+<link rel="modulepreload" href="./_npm/d3-brush@3.0.0/d162d8c6.js">
+<link rel="modulepreload" href="./_npm/d3-chord@3.0.1/5cedd0be.js">
+<link rel="modulepreload" href="./_npm/d3-color@3.1.0/65d51007.js">
+<link rel="modulepreload" href="./_npm/d3-contour@4.0.2/c576a91a.js">
+<link rel="modulepreload" href="./_npm/d3-delaunay@6.0.4/8b43826d.js">
+<link rel="modulepreload" href="./_npm/d3-dispatch@3.0.1/3fb06f14.js">
+<link rel="modulepreload" href="./_npm/d3-drag@3.0.0/20b76948.js">
+<link rel="modulepreload" href="./_npm/d3-dsv@3.0.1/097745a2.js">
+<link rel="modulepreload" href="./_npm/d3-ease@3.0.1/8683b012.js">
+<link rel="modulepreload" href="./_npm/d3-fetch@3.0.1/5c319046.js">
+<link rel="modulepreload" href="./_npm/d3-force@3.0.0/33924f3e.js">
+<link rel="modulepreload" href="./_npm/d3-format@3.1.2/8d67a1ae.js">
+<link rel="modulepreload" href="./_npm/d3-geo@3.1.1/8037bd0b.js">
+<link rel="modulepreload" href="./_npm/d3-hierarchy@3.1.2/a9ba0229.js">
+<link rel="modulepreload" href="./_npm/d3-interpolate@3.0.1/e0a47f97.js">
+<link rel="modulepreload" href="./_npm/d3-path@3.1.0/f9e9e0ab.js">
+<link rel="modulepreload" href="./_npm/d3-polygon@3.0.1/2da8eb3b.js">
+<link rel="modulepreload" href="./_npm/d3-quadtree@3.0.1/09002e01.js">
+<link rel="modulepreload" href="./_npm/d3-random@3.0.1/5108797c.js">
+<link rel="modulepreload" href="./_npm/d3-scale@4.0.2/c9f2571b.js">
+<link rel="modulepreload" href="./_npm/d3-scale-chromatic@3.1.0/f3c78e0d.js">
+<link rel="modulepreload" href="./_npm/d3-selection@3.0.0/28717d05.js">
+<link rel="modulepreload" href="./_npm/d3-shape@3.2.0/7c6e2a50.js">
+<link rel="modulepreload" href="./_npm/d3-time@3.1.0/3d1d57c6.js">
+<link rel="modulepreload" href="./_npm/d3-time-format@4.1.0/643581a8.js">
+<link rel="modulepreload" href="./_npm/d3-timer@3.0.1/e99232db.js">
+<link rel="modulepreload" href="./_npm/d3-transition@3.0.1/bd07fd9a.js">
+<link rel="modulepreload" href="./_npm/d3-zoom@3.0.0/d09f7cc9.js">
+<link rel="modulepreload" href="./_npm/binary-search-bounds@2.0.5/5f640032.js">
+<link rel="modulepreload" href="./_npm/internmap@2.0.3/af036d7e.js">
+<link rel="modulepreload" href="./_npm/delaunator@5.1.0/7b06abe7.js">
+<link rel="modulepreload" href="./_npm/robust-predicates@3.0.3/b42f30a7.js">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%253D%22http%253A%252F%252Fwww.w3.org%252F2000%252Fsvg%22%20viewBox%253D%220%200%2016%2016%22%3E%3Crect%20x%253D%221%22%20y%253D%228%22%20width%253D%223.5%22%20height%253D%227%22%20rx%253D%221%22%20fill%253D%22%2523898781%22%252F%3E%3Crect%20x%253D%226.25%22%20y%253D%223%22%20width%253D%223.5%22%20height%253D%2212%22%20rx%253D%221%22%20fill%253D%22%25232a78d6%22%252F%3E%3Crect%20x%253D%2211.5%22%20y%253D%226%22%20width%253D%223.5%22%20height%253D%229%22%20rx%253D%221%22%20fill%253D%22%25232a78d6%22%252F%3E%3C%252Fsvg%3E">
+<meta name="description" content="Robust measures of US inflation (trimmed-mean and median PCE) and the range of underlying inflation supported by the best trims, updated monthly from BEA data.">
+<meta name="robots" content="noindex">
+<script type="module">
+
+import {define} from "./_observablehq/client.b5c54e4c.js";
+
+define({id: "ae86d95b", outputs: ["palette","fmt","timeChart","momentumChart","contributionTable","tableView","OV","asDates","trend","headline","trimmed"], body: async () => {
+const [{palette, fmt}, {timeChart, momentumChart, contributionTable, tableView}] = await Promise.all([import("./_import/components/theme.5e6de32f.js"), import("./_import/components/charts.46f6f381.js")]);
+const OV = {"trend":[{"date":"2019-01-01","lo":1.772975,"hi":2.135011,"mean":1.975213},{"date":"2019-02-01","lo":1.799123,"hi":2.177489,"mean":2.009155},{"date":"2019-03-01","lo":1.845849,"hi":2.218749,"mean":2.051317},{"date":"2019-04-01","lo":1.929446,"hi":2.333366,"mean":2.149034},{"date":"2019-05-01","lo":1.853601,"hi":2.262875,"mean":2.074124},{"date":"2019-06-01","lo":1.796047,"hi":2.2236,"mean":2.027921},{"date":"2019-07-01","lo":1.844657,"hi":2.257558,"mean":2.067507},{"date":"2019-08-01","lo":1.845141,"hi":2.278032,"mean":2.078475},{"date":"2019-09-01","lo":1.752265,"hi":2.20908,"mean":2.001591},{"date":"2019-10-01","lo":1.800853,"hi":2.286533,"mean":2.060692},{"date":"2019-11-01","lo":1.765333,"hi":2.230527,"mean":2.012606},{"date":"2019-12-01","lo":1.754973,"hi":2.219825,"mean":2.000607},{"date":"2020-01-01","lo":1.834369,"hi":2.298404,"mean":2.07845},{"date":"2020-02-01","lo":1.82763,"hi":2.281903,"mean":2.068381},{"date":"2020-03-01","lo":1.758657,"hi":2.23812,"mean":2.013057},{"date":"2020-04-01","lo":1.665082,"hi":2.132584,"mean":1.917601},{"date":"2020-05-01","lo":1.75816,"hi":2.226015,"mean":2.007965},{"date":"2020-06-01","lo":1.802029,"hi":2.283987,"mean":2.052737},{"date":"2020-07-01","lo":1.84798,"hi":2.347195,"mean":2.103975},{"date":"2020-08-01","lo":1.888952,"hi":2.406248,"mean":2.152872},{"date":"2020-09-01","lo":1.907642,"hi":2.418693,"mean":2.162823},{"date":"2020-10-01","lo":1.831838,"hi":2.314699,"mean":2.076405},{"date":"2020-11-01","lo":1.781983,"hi":2.277662,"mean":2.026931},{"date":"2020-12-01","lo":1.769762,"hi":2.297335,"mean":2.029751},{"date":"2021-01-01","lo":1.722604,"hi":2.289454,"mean":1.991074},{"date":"2021-02-01","lo":1.789013,"hi":2.38444,"mean":2.065892},{"date":"2021-03-01","lo":1.878891,"hi":2.480854,"mean":2.14875},{"date":"2021-04-01","lo":2.003931,"hi":2.620567,"mean":2.265649},{"date":"2021-05-01","lo":2.051308,"hi":2.73306,"mean":2.335926},{"date":"2021-06-01","lo":2.105299,"hi":2.814257,"mean":2.403203},{"date":"2021-07-01","lo":2.166745,"hi":2.918952,"mean":2.484244},{"date":"2021-08-01","lo":2.227127,"hi":3.008007,"mean":2.55718},{"date":"2021-09-01","lo":2.470196,"hi":3.245121,"mean":2.795286},{"date":"2021-10-01","lo":2.757994,"hi":3.613639,"mean":3.109504},{"date":"2021-11-01","lo":2.998033,"hi":3.912389,"mean":3.37268},{"date":"2021-12-01","lo":3.256355,"hi":4.179932,"mean":3.630098},{"date":"2022-01-01","lo":3.679579,"hi":4.578398,"mean":4.049991},{"date":"2022-02-01","lo":3.840913,"hi":4.774685,"mean":4.212625},{"date":"2022-03-01","lo":3.934968,"hi":4.919024,"mean":4.321118},{"date":"2022-04-01","lo":3.960471,"hi":4.933895,"mean":4.34854},{"date":"2022-05-01","lo":4.173877,"hi":5.104882,"mean":4.545735},{"date":"2022-06-01","lo":4.601702,"hi":5.521818,"mean":4.970416},{"date":"2022-07-01","lo":4.67163,"hi":5.566525,"mean":5.034881},{"date":"2022-08-01","lo":4.897826,"hi":5.742607,"mean":5.239188},{"date":"2022-09-01","lo":4.901174,"hi":5.761993,"mean":5.254877},{"date":"2022-10-01","lo":4.913178,"hi":5.703739,"mean":5.243382},{"date":"2022-11-01","lo":4.877154,"hi":5.617364,"mean":5.193808},{"date":"2022-12-01","lo":4.81545,"hi":5.540652,"mean":5.133575},{"date":"2023-01-01","lo":4.625564,"hi":5.344931,"mean":4.939354},{"date":"2023-02-01","lo":4.59924,"hi":5.255594,"mean":4.901312},{"date":"2023-03-01","lo":4.64866,"hi":5.218325,"mean":4.92884},{"date":"2023-04-01","lo":4.719986,"hi":5.286646,"mean":5.004941},{"date":"2023-05-01","lo":4.572279,"hi":5.141687,"mean":4.874156},{"date":"2023-06-01","lo":4.153645,"hi":4.69262,"mean":4.443304},{"date":"2023-07-01","lo":4.023571,"hi":4.552274,"mean":4.308231},{"date":"2023-08-01","lo":3.747231,"hi":4.274231,"mean":4.032731},{"date":"2023-09-01","lo":3.64326,"hi":4.163545,"mean":3.928193},{"date":"2023-10-01","lo":3.473567,"hi":3.981787,"mean":3.750977},{"date":"2023-11-01","lo":3.3806,"hi":3.890071,"mean":3.657495},{"date":"2023-12-01","lo":3.217712,"hi":3.711401,"mean":3.48702},{"date":"2024-01-01","lo":3.266413,"hi":3.740593,"mean":3.53098},{"date":"2024-02-01","lo":3.12462,"hi":3.591539,"mean":3.382493},{"date":"2024-03-01","lo":3.054498,"hi":3.52952,"mean":3.318514},{"date":"2024-04-01","lo":2.909652,"hi":3.389811,"mean":3.175394},{"date":"2024-05-01","lo":2.773454,"hi":3.295317,"mean":3.055353},{"date":"2024-06-01","lo":2.721252,"hi":3.259556,"mean":3.014525},{"date":"2024-07-01","lo":2.662837,"hi":3.182385,"mean":2.945274},{"date":"2024-08-01","lo":2.64631,"hi":3.16744,"mean":2.928207},{"date":"2024-09-01","lo":2.650593,"hi":3.175105,"mean":2.934012},{"date":"2024-10-01","lo":2.650456,"hi":3.176241,"mean":2.938344},{"date":"2024-11-01","lo":2.634373,"hi":3.165012,"mean":2.92257},{"date":"2024-12-01","lo":2.693731,"hi":3.24386,"mean":2.990257},{"date":"2025-01-01","lo":2.467927,"hi":3.05126,"mean":2.766139},{"date":"2025-02-01","lo":2.482491,"hi":3.066988,"mean":2.784418},{"date":"2025-03-01","lo":2.466931,"hi":3.056588,"mean":2.767315},{"date":"2025-04-01","lo":2.552611,"hi":3.108923,"mean":2.83291},{"date":"2025-05-01","lo":2.592837,"hi":3.076432,"mean":2.835174},{"date":"2025-06-01","lo":2.719147,"hi":3.182377,"mean":2.950428},{"date":"2025-07-01","lo":2.708653,"hi":3.171756,"mean":2.940555},{"date":"2025-08-01","lo":2.754252,"hi":3.223824,"mean":2.987196},{"date":"2025-09-01","lo":2.681515,"hi":3.161971,"mean":2.909854},{"date":"2025-10-01","lo":2.560915,"hi":3.052623,"mean":2.78441},{"date":"2025-11-01","lo":2.523246,"hi":2.998018,"mean":2.738089},{"date":"2025-12-01","lo":2.511563,"hi":2.978036,"mean":2.719687},{"date":"2026-01-01","lo":2.492208,"hi":2.979841,"mean":2.709277},{"date":"2026-02-01","lo":2.419367,"hi":2.945084,"mean":2.645829},{"date":"2026-03-01","lo":2.420499,"hi":2.93733,"mean":2.642271},{"date":"2026-04-01","lo":2.389133,"hi":2.911828,"mean":2.615667},{"date":"2026-05-01","lo":2.425467,"hi":2.957085,"mean":2.652719},{"date":"2026-06-01","lo":2.286858,"hi":2.839326,"mean":2.518349},{"date":"2026-07-01","lo":2.256601,"hi":2.832899,"mean":2.497622},{"date":"2026-08-01","lo":2.210887,"hi":2.785796,"mean":2.451755}],"headline":[{"date":"2019-01-01","value":1.431832},{"date":"2019-02-01","value":1.400174},{"date":"2019-03-01","value":1.521808},{"date":"2019-04-01","value":1.566338},{"date":"2019-05-01","value":1.465554},{"date":"2019-06-01","value":1.426065},{"date":"2019-07-01","value":1.45393},{"date":"2019-08-01","value":1.430416},{"date":"2019-09-01","value":1.283954},{"date":"2019-10-01","value":1.288562},{"date":"2019-11-01","value":1.358277},{"date":"2019-12-01","value":1.563763},{"date":"2020-01-01","value":1.794482},{"date":"2020-02-01","value":1.689097},{"date":"2020-03-01","value":1.166209},{"date":"2020-04-01","value":0.462461},{"date":"2020-05-01","value":0.490163},{"date":"2020-06-01","value":0.759538},{"date":"2020-07-01","value":0.922584},{"date":"2020-08-01","value":1.157519},{"date":"2020-09-01","value":1.276354},{"date":"2020-10-01","value":1.187486},{"date":"2020-11-01","value":1.186265},{"date":"2020-12-01","value":1.334522},{"date":"2021-01-01","value":1.507321},{"date":"2021-02-01","value":1.786312},{"date":"2021-03-01","value":2.63544},{"date":"2021-04-01","value":3.577688},{"date":"2021-05-01","value":3.970484},{"date":"2021-06-01","value":4.217896},{"date":"2021-07-01","value":4.383331},{"date":"2021-08-01","value":4.509393},{"date":"2021-09-01","value":4.655568},{"date":"2021-10-01","value":5.277173},{"date":"2021-11-01","value":5.868438},{"date":"2021-12-01","value":6.044523},{"date":"2022-01-01","value":6.234856},{"date":"2022-02-01","value":6.50971},{"date":"2022-03-01","value":6.920266},{"date":"2022-04-01","value":6.633939},{"date":"2022-05-01","value":6.784554},{"date":"2022-06-01","value":7.218316},{"date":"2022-07-01","value":6.85953},{"date":"2022-08-01","value":6.683455},{"date":"2022-09-01","value":6.693164},{"date":"2022-10-01","value":6.505872},{"date":"2022-11-01","value":6.089649},{"date":"2022-12-01","value":5.606309},{"date":"2023-01-01","value":5.555654},{"date":"2023-02-01","value":5.199788},{"date":"2023-03-01","value":4.491151},{"date":"2023-04-01","value":4.532296},{"date":"2023-05-01","value":4.097018},{"date":"2023-06-01","value":3.345578},{"date":"2023-07-01","value":3.361337},{"date":"2023-08-01","value":3.438131},{"date":"2023-09-01","value":3.491693},{"date":"2023-10-01","value":3.100032},{"date":"2023-11-01","value":2.888658},{"date":"2023-12-01","value":2.862163},{"date":"2024-01-01","value":2.74765},{"date":"2024-02-01","value":2.807194},{"date":"2024-03-01","value":2.951557},{"date":"2024-04-01","value":2.83853},{"date":"2024-05-01","value":2.697101},{"date":"2024-06-01","value":2.569554},{"date":"2024-07-01","value":2.595981},{"date":"2024-08-01","value":2.436665},{"date":"2024-09-01","value":2.259417},{"date":"2024-10-01","value":2.406279},{"date":"2024-11-01","value":2.491039},{"date":"2024-12-01","value":2.647832},{"date":"2025-01-01","value":2.63244},{"date":"2025-02-01","value":2.574768},{"date":"2025-03-01","value":2.255205},{"date":"2025-04-01","value":2.331108},{"date":"2025-05-01","value":2.463342},{"date":"2025-06-01","value":2.612061},{"date":"2025-07-01","value":2.590925},{"date":"2025-08-01","value":2.694304},{"date":"2025-09-01","value":2.783014},{"date":"2025-10-01","value":2.657412},{"date":"2025-11-01","value":2.710442},{"date":"2025-12-01","value":2.777155},{"date":"2026-01-01","value":2.728367},{"date":"2026-02-01","value":2.801145},{"date":"2026-03-01","value":3.365404},{"date":"2026-04-01","value":3.573948},{"date":"2026-05-01","value":3.823334},{"date":"2026-06-01","value":3.45301},{"date":"2026-07-01","value":3.361543},{"date":"2026-08-01","value":3.419032}],"trimmed":[{"date":"2019-01-01","value":1.905983},{"date":"2019-02-01","value":1.964818},{"date":"2019-03-01","value":2.002278},{"date":"2019-04-01","value":2.121712},{"date":"2019-05-01","value":2.035257},{"date":"2019-06-01","value":1.990115},{"date":"2019-07-01","value":2.019041},{"date":"2019-08-01","value":2.037141},{"date":"2019-09-01","value":1.965934},{"date":"2019-10-01","value":1.962457},{"date":"2019-11-01","value":1.896432},{"date":"2019-12-01","value":1.886129},{"date":"2020-01-01","value":1.958015},{"date":"2020-02-01","value":1.937635},{"date":"2020-03-01","value":1.893321},{"date":"2020-04-01","value":1.782263},{"date":"2020-05-01","value":1.86796},{"date":"2020-06-01","value":1.891794},{"date":"2020-07-01","value":1.927316},{"date":"2020-08-01","value":1.950661},{"date":"2020-09-01","value":1.948424},{"date":"2020-10-01","value":1.902353},{"date":"2020-11-01","value":1.839879},{"date":"2020-12-01","value":1.827038},{"date":"2021-01-01","value":1.771441},{"date":"2021-02-01","value":1.786856},{"date":"2021-03-01","value":1.842836},{"date":"2021-04-01","value":1.923712},{"date":"2021-05-01","value":1.956795},{"date":"2021-06-01","value":2.005359},{"date":"2021-07-01","value":2.063093},{"date":"2021-08-01","value":2.122079},{"date":"2021-09-01","value":2.355486},{"date":"2021-10-01","value":2.604176},{"date":"2021-11-01","value":2.841591},{"date":"2021-12-01","value":3.096258},{"date":"2022-01-01","value":3.480347},{"date":"2022-02-01","value":3.66004},{"date":"2022-03-01","value":3.748579},{"date":"2022-04-01","value":3.796752},{"date":"2022-05-01","value":4.022504},{"date":"2022-06-01","value":4.460008},{"date":"2022-07-01","value":4.560189},{"date":"2022-08-01","value":4.777848},{"date":"2022-09-01","value":4.755797},{"date":"2022-10-01","value":4.797173},{"date":"2022-11-01","value":4.754485},{"date":"2022-12-01","value":4.708853},{"date":"2023-01-01","value":4.570557},{"date":"2023-02-01","value":4.539046},{"date":"2023-03-01","value":4.6086},{"date":"2023-04-01","value":4.694028},{"date":"2023-05-01","value":4.572868},{"date":"2023-06-01","value":4.149031},{"date":"2023-07-01","value":4.015811},{"date":"2023-08-01","value":3.765655},{"date":"2023-09-01","value":3.694874},{"date":"2023-10-01","value":3.529638},{"date":"2023-11-01","value":3.452444},{"date":"2023-12-01","value":3.288564},{"date":"2024-01-01","value":3.330554},{"date":"2024-02-01","value":3.209205},{"date":"2024-03-01","value":3.138607},{"date":"2024-04-01","value":3.016209},{"date":"2024-05-01","value":2.920046},{"date":"2024-06-01","value":2.903265},{"date":"2024-07-01","value":2.828603},{"date":"2024-08-01","value":2.801715},{"date":"2024-09-01","value":2.823141},{"date":"2024-10-01","value":2.844629},{"date":"2024-11-01","value":2.873153},{"date":"2024-12-01","value":2.957856},{"date":"2025-01-01","value":2.733873},{"date":"2025-02-01","value":2.733253},{"date":"2025-03-01","value":2.711358},{"date":"2025-04-01","value":2.744989},{"date":"2025-05-01","value":2.71405},{"date":"2025-06-01","value":2.816176},{"date":"2025-07-01","value":2.810808},{"date":"2025-08-01","value":2.875551},{"date":"2025-09-01","value":2.78384},{"date":"2025-10-01","value":2.649406},{"date":"2025-11-01","value":2.578453},{"date":"2025-12-01","value":2.528942},{"date":"2026-01-01","value":2.506783},{"date":"2026-02-01","value":2.42572},{"date":"2026-03-01","value":2.408694},{"date":"2026-04-01","value":2.39748},{"date":"2026-05-01","value":2.452318},{"date":"2026-06-01","value":2.295195},{"date":"2026-07-01","value":2.294558},{"date":"2026-08-01","value":2.223821}],"momentum":[{"measure":"Trimmed-mean PCE","m12":2.223821,"m3":1.888854,"_row":"Trimmed-mean PCE"},{"measure":"Median PCE","m12":2.660197,"m3":2.622641,"_row":"Median PCE"},{"measure":"Core PCE","m12":3.007596,"m3":2.046398,"_row":"Core PCE"},{"measure":"Headline PCE","m12":3.419032,"m3":1.034152,"_row":"Headline PCE"}],"up":[{"category":"Gasoline and other motor fuel","change":27.921296,"weight":2.124427,"contribution":0.593168},{"category":"Air transportation","change":19.449507,"weight":1.039137,"contribution":0.202107},{"category":"Financial service charges, fees, and commissions","change":6.632512,"weight":2.760379,"contribution":0.183082},{"category":"Computer software and accessories","change":15.609276,"weight":1.161404,"contribution":0.181287},{"category":"Paramedical services","change":3.754071,"weight":3.323242,"contribution":0.124757}],"down":[{"category":"Prescription drugs","change":-2.946539,"weight":2.835047,"contribution":-0.083536},{"category":"Telephone and related communication equipment","change":-14.064473,"weight":0.180273,"contribution":-0.025354},{"category":"Used light trucks","change":-2.310371,"weight":0.888549,"contribution":-0.020529},{"category":"Eggs","change":-23.013116,"weight":0.082699,"contribution":-0.019032}],"n_trims":76,"month":"2026-08-01"};
+const asDates = (rows) => rows.map((d) => ({...d, date: new Date(d.date)}));
+const trend = asDates(OV.trend), headline = asDates(OV.headline), trimmed = asDates(OV.trimmed);
+return {palette,fmt,timeChart,momentumChart,contributionTable,tableView,OV,asDates,trend,headline,trimmed};
+}});
+
+define({id: "46531ab0", inputs: ["palette","dark"], outputs: ["c"], body: (palette,dark) => {
+const c = palette(dark);
+return {c};
+}});
+
+define({id: "6c02b7c4", mode: "inline", inputs: ["resize","timeChart","c","trend","trimmed","headline","display"], body: async (resize,timeChart,c,trend,trimmed,headline,display) => {
+display(await(
+resize((width) => timeChart({c, width, height: 340,
+    band: {label: "Range of best trims", color: c.band, rows: trend, opacity: 0.17},
+    lines: [
+      {label: "Best-trims average", color: c.ink, rows: trend.map((d) => ({date: d.date, value: d.mean}))},
+      {label: "Trimmed-mean PCE", color: c.series["Trimmed-mean PCE"], rows: trimmed},
+      {label: "Headline PCE", color: c.series["Headline PCE"], rows: headline}
+    ]}))
+))
+}});
+
+define({id: "1667ab42", mode: "inline", inputs: ["tableView","fmt","headline","trend","display"], body: async (tableView,fmt,headline,trend,display) => {
+display(await(
+tableView([
+    {label: "Month", value: (d) => fmt.ym(d.date)},
+    {label: "Best trims, low", num: true, value: (d) => d.lo.toFixed(2)},
+    {label: "Best trims, high", num: true, value: (d) => d.hi.toFixed(2)},
+    {label: "Average", num: true, value: (d) => d.mean.toFixed(2)},
+    {label: "Headline PCE", num: true, value: (d) => headline.find((h) => +h.date === +d.date)?.value.toFixed(2) ?? "–"}
+  ], [...trend].reverse())
+))
+}});
+
+define({id: "8edd910f", mode: "inline", inputs: ["resize","momentumChart","OV","c","display"], body: async (resize,momentumChart,OV,c,display) => {
+display(await(
+resize((width) => momentumChart(OV.momentum, {width, c}))
+))
+}});
+
+define({id: "7496ae6f", mode: "inline", inputs: ["tableView","OV","display"], body: async (tableView,OV,display) => {
+display(await(
+tableView([
+      {label: "Measure", value: (d) => d.measure},
+      {label: "12 months", num: true, value: (d) => d.m12.toFixed(2)},
+      {label: "3 months, annualized", num: true, value: (d) => d.m3.toFixed(2)}
+    ], OV.momentum)
+))
+}});
+
+define({id: "6862cb41", mode: "inline", inputs: ["contributionTable","OV","display"], body: async (contributionTable,OV,display) => {
+display(await(
+contributionTable([...OV.up, ...OV.down], {compact: true})
+))
+}});
+
+</script>
+</head>
+<body>
+<input id="observablehq-sidebar-toggle" type="checkbox" title="Toggle sidebar">
+<label id="observablehq-sidebar-backdrop" for="observablehq-sidebar-toggle"></label>
+<nav id="observablehq-sidebar">
+  <ol>
+    <label id="observablehq-sidebar-close" for="observablehq-sidebar-toggle"></label>
+    <li class="observablehq-link observablehq-link-active"><a href="./">Robust Measures of Inflation</a></li>
+  </ol>
+  <ol>
+    <li class="observablehq-link observablehq-link-active"><a href="./">Overview</a></li>
+    <li class="observablehq-link"><a href="./trend-range">Underlying inflation range</a></li>
+    <li class="observablehq-link"><a href="./measures">The four measures</a></li>
+    <li class="observablehq-link"><a href="./drivers">What&#x27;s driving it</a></li>
+    <li class="observablehq-link"><a href="./agreement">Do the measures agree?</a></li>
+    <li class="observablehq-link"><a href="./robustness">Why trimmed means are robust</a></li>
+    <li class="observablehq-link"><a href="./data">Data and methods</a></li>
+  </ol>
+</nav>
+<script>{const e=document.querySelector("#observablehq-sidebar"),o=document.querySelector("#observablehq-sidebar-toggle"),r=sessionStorage.getItem("observablehq-sidebar");r?o.checked=r==="true":o.indeterminate=!0;for(const t of document.querySelectorAll("#observablehq-sidebar summary")){const s=t.parentElement;switch(sessionStorage.getItem(`observablehq-sidebar:${t.textContent}`)){case"true":s.open=!0;break;case"false":s.classList.contains("observablehq-section-active")||(s.open=!1);break}}addEventListener("beforeunload",()=>sessionStorage.setItem("observablehq-sidebar-scrolly",`${e.scrollTop}`));const a=sessionStorage.getItem("observablehq-sidebar-scrolly");a!=null&&(e.style.cssText="overflow: hidden;",e.scrollTop=+a,e.style.cssText="");}</script>
+<div id="observablehq-center">
+<header id="observablehq-header">
+<div class="vintage"><span>Data through <b>August 2026</b></span><span>Updated October 3, 2026</span></div>
+</header>
+<main id="observablehq-main" class="observablehq">
+<div class="observablehq observablehq--block"><!--:ae86d95b:--></div>
+<div class="observablehq observablehq--block"><!--:46531ab0:--></div>
+<p class="eyebrow">Underlying PCE inflation · August 2026</p>
+<h1 id="underlying-inflation-is-running-at-about-2-5" tabindex="-1"><a class="observablehq-header-anchor" href="#underlying-inflation-is-running-at-about-2-5">Underlying inflation is running at about 2.5%</a></h1>
+<p class="lede">Across the 76 trimmed means that track trend inflation best, the 12-month rate in August 2026 ranges from 2.2% to 2.8%, entirely above the 2% target. Their average, 2.5%, is down from 3.0% a year earlier. Momentum has slowed: over the past three months the trimmed mean rose at a 1.9% annual rate, below its 12-month pace of 2.2%. Headline PCE inflation, at 3.4%, is above the range. The largest upward pushes come from categories the trimmed mean sets aside: gasoline and other motor fuel (+27.9% over the year, about +0.59 pp of headline) and air transportation (+19.4%, about +0.20 pp of headline).</p>
+<div class="tiles lead">
+<div class="tile hero"><div class="label">Best-trims average · underlying inflation</div><div class="value">2.5%</div><div class="range">Range of the best trims: <b>2.2–2.8%</b></div><div class="delta">↓ 0.2 pp since May 2026</div><svg class="spark k-band" width="320" height="30" viewBox="0 0 320 30" role="img" aria-label="Last 24 months"><path d="M3.0,6.3L16.6,6.1L30.1,6.8L43.7,4.0L57.3,13.2L70.8,12.4L84.4,13.1L98.0,10.4L111.5,10.3L125.1,5.6L138.7,6.0L152.2,4.1L165.8,7.3L179.3,12.4L192.9,14.3L206.5,15.1L220.0,15.5L233.6,18.1L247.2,18.2L260.7,19.3L274.3,17.8L287.9,23.3L301.4,24.1L315.0,26.0"></path><circle cx="315.0" cy="26.0" r="3.5"></circle></svg></div>
+<div class="tile"><div class="label"><span class="dot k-tm"></span>Trimmed-mean PCE</div><div class="value">2.2%</div><div class="delta">↓ 0.2 pp since May 2026</div><svg class="spark k-tm" width="160" height="30" viewBox="0 0 160 30" role="img" aria-label="Last 24 months"><path d="M3.0,8.0L9.6,7.4L16.2,6.5L22.8,4.0L29.4,10.7L36.0,10.7L42.7,11.4L49.3,10.4L55.9,11.3L62.5,8.2L69.1,8.4L75.7,6.5L82.3,9.2L88.9,13.2L95.5,15.4L102.1,16.9L108.7,17.5L115.3,19.9L122.0,20.5L128.6,20.8L135.2,19.2L141.8,23.9L148.4,23.9L155.0,26.0"></path><circle cx="155.0" cy="26.0" r="3.5"></circle></svg></div>
+<div class="tile"><div class="label"><span class="dot k-median"></span>Median PCE</div><div class="value">2.7%</div><div class="delta">↓ 0.2 pp since May 2026</div><svg class="spark k-median" width="160" height="30" viewBox="0 0 160 30" role="img" aria-label="Last 24 months"><path d="M3.0,11.4L9.6,10.9L16.2,11.6L22.8,6.9L29.4,13.7L36.0,11.1L42.7,11.2L49.3,10.1L55.9,11.5L62.5,8.1L69.1,6.1L75.7,4.0L82.3,8.3L88.9,12.3L95.5,15.1L102.1,16.3L108.7,17.4L115.3,19.5L122.0,20.2L128.6,22.2L135.2,20.7L141.8,23.4L148.4,22.8L155.0,26.0"></path><circle cx="155.0" cy="26.0" r="3.5"></circle></svg></div>
+<div class="tile"><div class="label"><span class="dot k-core"></span>Core PCE</div><div class="value">3.0%</div><div class="delta">↓ 0.2 pp since May 2026</div><svg class="spark k-core" width="160" height="30" viewBox="0 0 160 30" role="img" aria-label="Last 24 months"><path d="M3.0,15.8L9.6,13.5L16.2,14.6L22.8,13.5L29.4,16.9L36.0,16.5L42.7,26.0L49.3,21.8L55.9,17.8L62.5,16.4L69.1,15.8L75.7,15.4L82.3,16.7L88.9,20.8L95.5,20.2L102.1,14.7L108.7,12.2L115.3,11.5L122.0,6.1L128.6,6.9L135.2,4.0L141.8,8.4L148.4,10.6L155.0,9.7"></path><circle cx="155.0" cy="9.7" r="3.5"></circle></svg></div>
+<div class="tile"><div class="label"><span class="dot k-headline"></span>Headline PCE</div><div class="value">3.4%</div><div class="delta">↓ 0.4 pp since May 2026</div><svg class="spark k-headline" width="160" height="30" viewBox="0 0 160 30" role="img" aria-label="Last 24 months"><path d="M3.0,25.9L9.6,23.9L16.2,22.7L22.8,20.5L29.4,20.7L36.0,21.5L42.7,26.0L49.3,24.9L55.9,23.1L62.5,21.0L69.1,21.3L75.7,19.8L82.3,18.6L88.9,20.4L95.5,19.6L102.1,18.7L108.7,19.4L115.3,18.3L122.0,10.4L128.6,7.5L135.2,4.0L141.8,9.2L148.4,10.5L155.0,9.7"></path><circle cx="155.0" cy="9.7" r="3.5"></circle></svg></div>
+</div>
+<div class="card">
+  <h3>Underlying and headline inflation since 2019</h3>
+  <p class="sub">12-month change. The shaded band is the range of the 76 best trims; the dark line is their average.</p>
+  <observablehq-loading></observablehq-loading><!--:6c02b7c4:-->
+  <observablehq-loading></observablehq-loading><!--:1667ab42:-->
+</div>
+<div class="two-up wide-right">
+  <div class="card">
+    <h3>Is inflation speeding up or slowing down?</h3>
+    <p class="sub">Each measure over the last 12 months (hollow) and the last 3 months at an annual rate (filled).</p>
+    <observablehq-loading></observablehq-loading><!--:8edd910f:-->
+    <observablehq-loading></observablehq-loading><!--:7496ae6f:-->
+  </div>
+  <div class="card">
+    <h3>What the trimmed mean sets aside</h3>
+    <p class="sub">Categories with the most extreme 12-month price changes, which the trimmed mean drops, ranked by their approximate pull on headline (share of spending × price change).</p>
+    <observablehq-loading></observablehq-loading><!--:6862cb41:-->
+  </div>
+</div>
+<h2 id="explore" tabindex="-1"><a class="observablehq-header-anchor" href="#explore">Explore</a></h2>
+<div class="explore">
+  <a href="./trend-range"><strong>Underlying inflation range →</strong><span>The paper's Figure 1, updated monthly, for each measure of trend inflation.</span></a>
+  <a href="./measures"><strong>The four measures →</strong><span>Headline, core, median and trimmed mean over 1, 3 and 12 months.</span></a>
+  <a href="./drivers"><strong>What's driving it →</strong><span>This month's price changes by category, and what trimming removes.</span></a>
+  <a href="./agreement"><strong>Do the measures agree? →</strong><span>How far core, median and trimmed mean diverge, and when.</span></a>
+  <a href="./robustness"><strong>Why trimmed means are robust →</strong><span>How every possible trim performs at tracking trend inflation.</span></a>
+  <a href="./data"><strong>Data and methods →</strong><span>Download the series; definitions and sources.</span></a>
+</div>
+<h2 id="about-these-measures" tabindex="-1"><a class="observablehq-header-anchor" href="#about-these-measures">About these measures</a></h2>
+<ul>
+<li><strong>Trimmed-mean PCE</strong> drops the categories with the most extreme price changes each month (the lightest 24% and heaviest 31% of spending) and averages the rest, following the Dallas Fed's definition.</li>
+<li><strong>Median PCE</strong> is the price change in the middle of the spending-weighted distribution of categories, following the Cleveland Fed's approach.</li>
+<li><strong>The best-trims range.</strong> The paper shows that many trims track trend inflation about equally well: their errors cannot be statistically distinguished from the best trim's. Reporting the range they span, rather than one trim, shows how precisely underlying inflation is pinned down.</li>
+<li>All four series are computed by the authors from BEA's detailed PCE price data and differ slightly from the official Federal Reserve series. <a href="./data">Methods →</a></li>
+</ul>
+</main>
+<footer id="observablehq-footer">
+<div>Ocampo, Schoenle and Smith, “Robustness of Robust Measures of Inflation,” <i>International Journal of Central Banking</i>, forthcoming. Computed from BEA's detailed PCE data; an independent research companion, not an official statistic.</div>
+</footer>
+</div>
+</body>
 </html>

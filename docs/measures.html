@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="generator" content="Observable Framework v1.13.4">
+<title>The four measures | Robust Measures of Inflation</title>
+
+<link rel="preload" as="style" href="./_import/style.af065f40.css">
+<link rel="stylesheet" type="text/css" href="./_import/style.af065f40.css">
+<link rel="modulepreload" href="./_observablehq/client.b5c54e4c.js">
+<link rel="modulepreload" href="./_observablehq/runtime.fa9f71c0.js">
+<link rel="modulepreload" href="./_observablehq/stdlib.c4209144.js">
+<link rel="modulepreload" href="./_import/components/theme.5e6de32f.js">
+<link rel="modulepreload" href="./_import/components/controls.fdb395c0.js">
+<link rel="modulepreload" href="./_import/components/charts.46f6f381.js">
+<link rel="modulepreload" href="./_npm/htl@1.0.0/11521f02.js">
+<link rel="modulepreload" href="./_npm/@observablehq/plot@0.6.17/93ce672e.js">
+<link rel="modulepreload" href="./_npm/d3@7.9.0/080cf928.js">
+<link rel="modulepreload" href="./_npm/d3-dsv@3.0.1/097745a2.js">
+<link rel="modulepreload" href="./_npm/isoformat@0.2.1/604cb63b.js">
+<link rel="modulepreload" href="./_npm/interval-tree-1d@1.0.4/f53f17b2.js">
+<link rel="modulepreload" href="./_npm/d3-array@3.2.4/b8e751b6.js">
+<link rel="modulepreload" href="./_npm/d3-axis@3.0.0/c662ea05.js">
+<link rel="modulepreload" href="./_npm/d3-brush@3.0.0/d162d8c6.js">
+<link rel="modulepreload" href="./_npm/d3-chord@3.0.1/5cedd0be.js">
+<link rel="modulepreload" href="./_npm/d3-color@3.1.0/65d51007.js">
+<link rel="modulepreload" href="./_npm/d3-contour@4.0.2/c576a91a.js">
+<link rel="modulepreload" href="./_npm/d3-delaunay@6.0.4/8b43826d.js">
+<link rel="modulepreload" href="./_npm/d3-dispatch@3.0.1/3fb06f14.js">
+<link rel="modulepreload" href="./_npm/d3-drag@3.0.0/20b76948.js">
+<link rel="modulepreload" href="./_npm/d3-ease@3.0.1/8683b012.js">
+<link rel="modulepreload" href="./_npm/d3-fetch@3.0.1/5c319046.js">
+<link rel="modulepreload" href="./_npm/d3-force@3.0.0/33924f3e.js">
+<link rel="modulepreload" href="./_npm/d3-format@3.1.2/8d67a1ae.js">
+<link rel="modulepreload" href="./_npm/d3-geo@3.1.1/8037bd0b.js">
+<link rel="modulepreload" href="./_npm/d3-hierarchy@3.1.2/a9ba0229.js">
+<link rel="modulepreload" href="./_npm/d3-interpolate@3.0.1/e0a47f97.js">
+<link rel="modulepreload" href="./_npm/d3-path@3.1.0/f9e9e0ab.js">
+<link rel="modulepreload" href="./_npm/d3-polygon@3.0.1/2da8eb3b.js">
+<link rel="modulepreload" href="./_npm/d3-quadtree@3.0.1/09002e01.js">
+<link rel="modulepreload" href="./_npm/d3-random@3.0.1/5108797c.js">
+<link rel="modulepreload" href="./_npm/d3-scale@4.0.2/c9f2571b.js">
+<link rel="modulepreload" href="./_npm/d3-scale-chromatic@3.1.0/f3c78e0d.js">
+<link rel="modulepreload" href="./_npm/d3-selection@3.0.0/28717d05.js">
+<link rel="modulepreload" href="./_npm/d3-shape@3.2.0/7c6e2a50.js">
+<link rel="modulepreload" href="./_npm/d3-time@3.1.0/3d1d57c6.js">
+<link rel="modulepreload" href="./_npm/d3-time-format@4.1.0/643581a8.js">
+<link rel="modulepreload" href="./_npm/d3-timer@3.0.1/e99232db.js">
+<link rel="modulepreload" href="./_npm/d3-transition@3.0.1/bd07fd9a.js">
+<link rel="modulepreload" href="./_npm/d3-zoom@3.0.0/d09f7cc9.js">
+<link rel="modulepreload" href="./_npm/binary-search-bounds@2.0.5/5f640032.js">
+<link rel="modulepreload" href="./_npm/internmap@2.0.3/af036d7e.js">
+<link rel="modulepreload" href="./_npm/delaunator@5.1.0/7b06abe7.js">
+<link rel="modulepreload" href="./_npm/robust-predicates@3.0.3/b42f30a7.js">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%253D%22http%253A%252F%252Fwww.w3.org%252F2000%252Fsvg%22%20viewBox%253D%220%200%2016%2016%22%3E%3Crect%20x%253D%221%22%20y%253D%228%22%20width%253D%223.5%22%20height%253D%227%22%20rx%253D%221%22%20fill%253D%22%2523898781%22%252F%3E%3Crect%20x%253D%226.25%22%20y%253D%223%22%20width%253D%223.5%22%20height%253D%2212%22%20rx%253D%221%22%20fill%253D%22%25232a78d6%22%252F%3E%3Crect%20x%253D%2211.5%22%20y%253D%226%22%20width%253D%223.5%22%20height%253D%229%22%20rx%253D%221%22%20fill%253D%22%25232a78d6%22%252F%3E%3C%252Fsvg%3E">
+<meta name="description" content="Robust measures of US inflation (trimmed-mean and median PCE) and the range of underlying inflation supported by the best trims, updated monthly from BEA data.">
+<meta name="robots" content="noindex">
+<script type="module">
+
+import {define} from "./_observablehq/client.b5c54e4c.js";
+import {registerFile} from "./_observablehq/stdlib.c4209144.js";
+
+registerFile("./data/series/12m.csv", {"name":"./data/series/12m.csv","mimeType":"text/csv","path":"./_file/data/series/12m.835cd000.csv","lastModified":1791082379433,"size":116411});
+registerFile("./data/series/1m.csv", {"name":"./data/series/1m.csv","mimeType":"text/csv","path":"./_file/data/series/1m.e9e52c2f.csv","lastModified":1791082379861,"size":117831});
+registerFile("./data/series/3m.csv", {"name":"./data/series/3m.csv","mimeType":"text/csv","path":"./_file/data/series/3m.78034274.csv","lastModified":1791082379655,"size":117681});
+
+define({id: "92bc42b6", inputs: ["FileAttachment"], outputs: ["palette","fmt","MEASURES","KEY","HORIZONS","horizonText","monthsBefore","segmented","checkboxes","timeChart","statTile","tableView","deltaText","sparkline","files"], body: async (FileAttachment) => {
+const [{palette, fmt, MEASURES, KEY, HORIZONS, horizonText, monthsBefore}, {segmented, checkboxes}, {timeChart, statTile, tableView, deltaText, sparkline}] = await Promise.all([import("./_import/components/theme.5e6de32f.js"), import("./_import/components/controls.fdb395c0.js"), import("./_import/components/charts.46f6f381.js")]);
+const files = {"12m": FileAttachment("./data/series/12m.csv"), "3m": FileAttachment("./data/series/3m.csv"), "1m": FileAttachment("./data/series/1m.csv")};
+return {palette,fmt,MEASURES,KEY,HORIZONS,horizonText,monthsBefore,segmented,checkboxes,timeChart,statTile,tableView,deltaText,sparkline,files};
+}});
+
+define({id: "58c8f9bf", inputs: ["segmented","HORIZONS","checkboxes","MEASURES","KEY","display","html","Generators"], outputs: ["horizonInput","spanInput","pickInput","horizon","years","shown"], body: (segmented,HORIZONS,checkboxes,MEASURES,KEY,display,html,Generators) => {
+const horizonInput = segmented(HORIZONS, {label: "Change over", value: "12m", key: "rrm-horizon"});
+const spanInput = segmented(new Map([["3 years", 3], ["5 years", 5], ["10 years", 10], ["Since 1960", 0]]), {label: "Show", value: 5});
+const pickInput = checkboxes(MEASURES, {label: "Measures", keyClass: (m) => `k-${KEY[m]}`});
+display(html`<div class="controls">${horizonInput}${spanInput}${pickInput}</div>`);
+const horizon = Generators.input(horizonInput);
+const years = Generators.input(spanInput);
+const shown = Generators.input(pickInput);
+return {horizonInput,spanInput,pickInput,horizon,years,shown};
+}});
+
+define({id: "52756ba2", inputs: ["files","horizon"], outputs: ["series"], body: (files,horizon) => {
+const series = files[horizon].csv({typed: true});
+return {series};
+}});
+
+define({id: "525cbc0a", inputs: ["palette","dark","series","monthsBefore","years"], outputs: ["c","last","then","index","at","start","rows","recent","months"], body: (palette,dark,series,monthsBefore,years) => {
+const c = palette(dark);
+const last = series.reduce((m, d) => (d.date > m ? d.date : m), series[0].date);
+const then = monthsBefore(last, 3);
+const index = new Map(series.map((d) => [`${d.measure}|${+d.date}`, d.value]));  // O(1) lookups for tiles and tables
+const at = (m, date) => index.get(`${m}|${+date}`);
+const start = years ? monthsBefore(last, 12 * years) : new Date(Date.UTC(1960, 0, 1));
+const rows = (m) => series.filter((d) => d.measure === m && d.date >= start).map(({date, value}) => ({date, value}));
+const recent = (m) => series.filter((d) => d.measure === m && d.date > monthsBefore(last, 24)).map((d) => d.value);
+const months = [...new Set(series.filter((d) => d.date >= start).map((d) => +d.date))].sort((a, b) => b - a).map((t) => new Date(t));
+return {c,last,then,index,at,start,rows,recent,months};
+}});
+
+define({id: "8b643d1c", mode: "inline", inputs: ["MEASURES","statTile","KEY","fmt","at","last","deltaText","then","sparkline","recent","display"], body: async (MEASURES,statTile,KEY,fmt,at,last,deltaText,then,sparkline,recent,display) => {
+display(await(
+MEASURES.map((m) => statTile({label: m, keyClass: `k-${KEY[m]}`, value: fmt.pct(at(m, last)),
+    delta: deltaText(at(m, last), at(m, then), fmt.monthShort(then)), spark: sparkline(recent(m), `k-${KEY[m]}`)}))
+))
+}});
+
+define({id: "160d8d45", mode: "inline", inputs: ["horizonText","horizon","display"], body: async (horizonText,horizon,display) => {
+display(await(
+horizonText[horizon][0].toUpperCase() + horizonText[horizon].slice(1)
+))
+}});
+
+define({id: "071e744f", mode: "inline", inputs: ["fmt","last","display"], body: async (fmt,last,display) => {
+display(await(
+fmt.month(last)
+))
+}});
+
+define({id: "ad8e75a7", mode: "inline", inputs: ["horizon","display"], body: async (horizon,display) => {
+display(await(
+horizon === "12m" ? "Change from the same month a year earlier." : `Change over the last ${horizon === "1m" ? "month" : "three months"}, expressed as an annual rate. Shorter horizons react sooner but are noisier.`
+))
+}});
+
+define({id: "592a7302", mode: "inline", inputs: ["shown","resize","timeChart","c","MEASURES","rows","html","display"], body: async (shown,resize,timeChart,c,MEASURES,rows,html,display) => {
+display(await(
+shown.length ? resize((width) => timeChart({c, width, height: 380,
+    lines: MEASURES.filter((m) => shown.includes(m)).map((m) => ({label: m, color: c.series[m], rows: rows(m)}))})) : html`<p class="muted">Choose at least one measure.</p>`
+))
+}});
+
+define({id: "d9ea315a", mode: "inline", inputs: ["tableView","fmt","MEASURES","at","months","display"], body: async (tableView,fmt,MEASURES,at,months,display) => {
+display(await(
+tableView([{label: "Month", value: (d) => fmt.ym(d)}, ...MEASURES.map((m) => ({label: m, num: true, value: (d) => at(m, d)?.toFixed(2) ?? "–"}))], months)
+))
+}});
+
+</script>
+</head>
+<body>
+<input id="observablehq-sidebar-toggle" type="checkbox" title="Toggle sidebar">
+<label id="observablehq-sidebar-backdrop" for="observablehq-sidebar-toggle"></label>
+<nav id="observablehq-sidebar">
+  <ol>
+    <label id="observablehq-sidebar-close" for="observablehq-sidebar-toggle"></label>
+    <li class="observablehq-link"><a href="./">Robust Measures of Inflation</a></li>
+  </ol>
+  <ol>
+    <li class="observablehq-link"><a href="./">Overview</a></li>
+    <li class="observablehq-link"><a href="./trend-range">Underlying inflation range</a></li>
+    <li class="observablehq-link observablehq-link-active"><a href="./measures">The four measures</a></li>
+    <li class="observablehq-link"><a href="./drivers">What&#x27;s driving it</a></li>
+    <li class="observablehq-link"><a href="./agreement">Do the measures agree?</a></li>
+    <li class="observablehq-link"><a href="./robustness">Why trimmed means are robust</a></li>
+    <li class="observablehq-link"><a href="./data">Data and methods</a></li>
+  </ol>
+</nav>
+<script>{const e=document.querySelector("#observablehq-sidebar"),o=document.querySelector("#observablehq-sidebar-toggle"),r=sessionStorage.getItem("observablehq-sidebar");r?o.checked=r==="true":o.indeterminate=!0;for(const t of document.querySelectorAll("#observablehq-sidebar summary")){const s=t.parentElement;switch(sessionStorage.getItem(`observablehq-sidebar:${t.textContent}`)){case"true":s.open=!0;break;case"false":s.classList.contains("observablehq-section-active")||(s.open=!1);break}}addEventListener("beforeunload",()=>sessionStorage.setItem("observablehq-sidebar-scrolly",`${e.scrollTop}`));const a=sessionStorage.getItem("observablehq-sidebar-scrolly");a!=null&&(e.style.cssText="overflow: hidden;",e.scrollTop=+a,e.style.cssText="");}</script>
+<div id="observablehq-center">
+<header id="observablehq-header">
+<div class="vintage"><span>Data through <b>August 2026</b></span><span>Updated October 3, 2026</span></div>
+</header>
+<main id="observablehq-main" class="observablehq">
+<div class="observablehq observablehq--block"><!--:92bc42b6:--></div>
+<p class="eyebrow">Measures</p>
+<h1 id="headline-core-median-and-trimmed-mean-inflation" tabindex="-1"><a class="observablehq-header-anchor" href="#headline-core-median-and-trimmed-mean-inflation">Headline, core, median and trimmed-mean inflation</a></h1>
+<p class="lede">Four ways to measure consumer price inflation from the same PCE data. Headline counts every category; core drops food and energy; the median and trimmed mean drop the most extreme price changes, whatever category they come from, so a single volatile category cannot swing them.</p>
+<div class="observablehq observablehq--block"><!--:58c8f9bf:--></div>
+<div class="observablehq observablehq--block"><!--:52756ba2:--></div>
+<div class="observablehq observablehq--block"><!--:525cbc0a:--></div>
+<div class="tiles">
+  <observablehq-loading></observablehq-loading><!--:8b643d1c:-->
+</div>
+<div class="card">
+  <h3><observablehq-loading></observablehq-loading><!--:160d8d45:-->, through <observablehq-loading></observablehq-loading><!--:071e744f:--></h3>
+  <p class="sub"><observablehq-loading></observablehq-loading><!--:ad8e75a7:--></p>
+  <observablehq-loading></observablehq-loading><!--:592a7302:-->
+  <observablehq-loading></observablehq-loading><!--:d9ea315a:-->
+</div>
+<p class="footnote">Headline and core PCE are BEA's published price indexes. The median and trimmed mean are computed by the authors from BEA's detailed category data, following the Cleveland Fed's and Dallas Fed's definitions, and differ slightly from the official series. Each is dated to the month of the price change it measures.</p>
+</main>
+<footer id="observablehq-footer">
+<div>Ocampo, Schoenle and Smith, “Robustness of Robust Measures of Inflation,” <i>International Journal of Central Banking</i>, forthcoming. Computed from BEA's detailed PCE data; an independent research companion, not an official statistic.</div>
+</footer>
+</div>
+</body>
+</html>

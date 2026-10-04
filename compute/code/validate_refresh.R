@@ -44,7 +44,7 @@ if (nrow(mm) > 0) { print(head(mm, 10)); stop("BEA lines no longer match categor
 
 # 3. trimmed mean vs official Dallas -------------------------------------------
 dal <- fred("PCETRIM12M159SFRBDAL")
-j <- inner_join(s |> filter(measure == "Dallas trimmed mean"), dal, by = "date") |> filter(date >= max(date) - 365)
+j <- inner_join(s |> filter(measure == "Trimmed-mean PCE"), dal, by = "date") |> filter(date >= max(date) - 365)
 g <- mean(abs(j$value - j$v), na.rm = TRUE)
 message(sprintf("[3] trimmed mean vs official Dallas, last 12m: mean|gap| = %.3f pp (historically ~0.05)", g))
 if (g > 0.2) warning("Trimmed-mean gap to official Dallas is unusually large — investigate before pushing.")

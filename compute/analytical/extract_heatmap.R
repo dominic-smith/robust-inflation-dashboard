@@ -1,5 +1,5 @@
 # ONE-TIME / ANNUAL extract of the paper's analytical layer (the trim-grid RMSE
-# surfaces) into the dashboard's artifacts/ (then run pack_app_data.R). NOT part of the monthly
+# surfaces) into the dashboard's artifacts/ (then ./build.sh). NOT part of the monthly
 # refresh: the optimal-trim / prediction results are a paper finding, refreshed
 # only when the authors rerun the prediction analysis. It reads the paper repo's
 # output/ once; the committed CSVs are what the app actually uses.

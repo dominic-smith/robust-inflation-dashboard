@@ -1,6 +1,6 @@
 # Export dashboard artifacts from the computed pipeline outputs into artifacts/ (CSV).
 # Run with the working directory at compute/code/ (after run_compute.R).
-# Writes only into ../../artifacts; pack_app_data.R then builds app/data/dashboard.rds.
+# Writes only into ../../artifacts, which the site (site/) reads at build time.
 #
 # Produces horizon-aware series (1m / 3m annualized, 12m) by building a monthly
 # price index for each measure and letting the app derive any horizon; plus the
@@ -12,7 +12,10 @@ suppressPackageStartupMessages({library(dplyr); library(tidyr); library(readr)})
 APP_DATA <- normalizePath("../../artifacts", mustWork = FALSE)
 if (!dir.exists(APP_DATA)) dir.create(APP_DATA, recursive = TRUE)
 stata_m_to_date <- function(m) { m <- as.integer(m); as.Date(sprintf("%d-%02d-01", 1960L + m %/% 12L, m %% 12L + 1L)) }
-MEASURE_LEVELS <- c("Headline PCE", "Core PCE", "Cleveland median", "Dallas trimmed mean")
+# Median and trimmed mean are the authors' reconstructions (Cleveland-style median;
+# Dallas 24/69 trim) from BEA detail, named so they are not mistaken for the official
+# Federal Reserve series.
+MEASURE_LEVELS <- c("Headline PCE", "Core PCE", "Median PCE", "Trimmed-mean PCE")
 HORIZONS <- c(`1m` = 1L, `3m` = 3L, `12m` = 12L)
 
 # --- monthly price index per measure (stata-month date -> level) -----------
@@ -32,8 +35,8 @@ idx_from_change <- function(df) {           # df: date, trimmed_mean_1 (monthly 
 idx_list <- list(
   `Headline PCE`        = top  |> filter(line == 1)   |> distinct(date, idx = price_index),
   `Core PCE`            = allm |> filter(line == 372) |> distinct(date, idx = price_index),
-  `Cleveland median`    = idx_from_change(tm_cle),
-  `Dallas trimmed mean` = idx_from_change(tm_dal)
+  `Median PCE`    = idx_from_change(tm_cle),
+  `Trimmed-mean PCE` = idx_from_change(tm_dal)
 ) |> lapply(function(d) arrange(filter(d, !is.na(idx)), date))
 
 # annualized h-month change at each date (calendar lag h; NA if t-h absent)
@@ -90,9 +93,9 @@ chk <- series_h |> filter(horizon == "12m") |>
   mutate(dm = as.integer((as.integer(format(date, "%Y")) - 1960) * 12 + as.integer(format(date, "%m")) - 1))
 agg <- readRDS("../data/3_done/d22m_agg_time_series.rds")
 cmp <- agg |> transmute(dm = date, `Headline PCE` = agg_pce, `Core PCE` = core_pce,
-                        `Cleveland median` = median_pce, `Dallas trimmed mean` = trimmed_mean) |>
+                        `Median PCE` = median_pce, `Trimmed-mean PCE` = trimmed_mean) |>
   pivot_longer(-dm, names_to = "measure", values_to = "ref") |>
-  mutate(dm = ifelse(measure %in% c("Cleveland median", "Dallas trimmed mean"), dm - 1L, dm))
+  mutate(dm = ifelse(measure %in% c("Median PCE", "Trimmed-mean PCE"), dm - 1L, dm))
 v <- chk |> inner_join(cmp, by = c("dm", "measure")) |> mutate(d = abs(value - ref))
 vv <- v |> group_by(measure) |> summarise(max_d = max(d, na.rm = TRUE))
 message("12m validation vs d22m (median/trim shifted 1m): ",

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="generator" content="Observable Framework v1.13.4">
+<title>Do the measures agree? | Robust Measures of Inflation</title>
+
+<link rel="preload" as="style" href="./_import/style.af065f40.css">
+<link rel="stylesheet" type="text/css" href="./_import/style.af065f40.css">
+<link rel="modulepreload" href="./_observablehq/client.b5c54e4c.js">
+<link rel="modulepreload" href="./_observablehq/runtime.fa9f71c0.js">
+<link rel="modulepreload" href="./_observablehq/stdlib.c4209144.js">
+<link rel="modulepreload" href="./_import/components/theme.5e6de32f.js">
+<link rel="modulepreload" href="./_import/components/controls.fdb395c0.js">
+<link rel="modulepreload" href="./_import/components/charts.46f6f381.js">
+<link rel="modulepreload" href="./_npm/htl@1.0.0/11521f02.js">
+<link rel="modulepreload" href="./_npm/@observablehq/plot@0.6.17/93ce672e.js">
+<link rel="modulepreload" href="./_npm/d3@7.9.0/080cf928.js">
+<link rel="modulepreload" href="./_npm/d3-dsv@3.0.1/097745a2.js">
+<link rel="modulepreload" href="./_npm/isoformat@0.2.1/604cb63b.js">
+<link rel="modulepreload" href="./_npm/interval-tree-1d@1.0.4/f53f17b2.js">
+<link rel="modulepreload" href="./_npm/d3-array@3.2.4/b8e751b6.js">
+<link rel="modulepreload" href="./_npm/d3-axis@3.0.0/c662ea05.js">
+<link rel="modulepreload" href="./_npm/d3-brush@3.0.0/d162d8c6.js">
+<link rel="modulepreload" href="./_npm/d3-chord@3.0.1/5cedd0be.js">
+<link rel="modulepreload" href="./_npm/d3-color@3.1.0/65d51007.js">
+<link rel="modulepreload" href="./_npm/d3-contour@4.0.2/c576a91a.js">
+<link rel="modulepreload" href="./_npm/d3-delaunay@6.0.4/8b43826d.js">
+<link rel="modulepreload" href="./_npm/d3-dispatch@3.0.1/3fb06f14.js">
+<link rel="modulepreload" href="./_npm/d3-drag@3.0.0/20b76948.js">
+<link rel="modulepreload" href="./_npm/d3-ease@3.0.1/8683b012.js">
+<link rel="modulepreload" href="./_npm/d3-fetch@3.0.1/5c319046.js">
+<link rel="modulepreload" href="./_npm/d3-force@3.0.0/33924f3e.js">
+<link rel="modulepreload" href="./_npm/d3-format@3.1.2/8d67a1ae.js">
+<link rel="modulepreload" href="./_npm/d3-geo@3.1.1/8037bd0b.js">
+<link rel="modulepreload" href="./_npm/d3-hierarchy@3.1.2/a9ba0229.js">
+<link rel="modulepreload" href="./_npm/d3-interpolate@3.0.1/e0a47f97.js">
+<link rel="modulepreload" href="./_npm/d3-path@3.1.0/f9e9e0ab.js">
+<link rel="modulepreload" href="./_npm/d3-polygon@3.0.1/2da8eb3b.js">
+<link rel="modulepreload" href="./_npm/d3-quadtree@3.0.1/09002e01.js">
+<link rel="modulepreload" href="./_npm/d3-random@3.0.1/5108797c.js">
+<link rel="modulepreload" href="./_npm/d3-scale@4.0.2/c9f2571b.js">
+<link rel="modulepreload" href="./_npm/d3-scale-chromatic@3.1.0/f3c78e0d.js">
+<link rel="modulepreload" href="./_npm/d3-selection@3.0.0/28717d05.js">
+<link rel="modulepreload" href="./_npm/d3-shape@3.2.0/7c6e2a50.js">
+<link rel="modulepreload" href="./_npm/d3-time@3.1.0/3d1d57c6.js">
+<link rel="modulepreload" href="./_npm/d3-time-format@4.1.0/643581a8.js">
+<link rel="modulepreload" href="./_npm/d3-timer@3.0.1/e99232db.js">
+<link rel="modulepreload" href="./_npm/d3-transition@3.0.1/bd07fd9a.js">
+<link rel="modulepreload" href="./_npm/d3-zoom@3.0.0/d09f7cc9.js">
+<link rel="modulepreload" href="./_npm/binary-search-bounds@2.0.5/5f640032.js">
+<link rel="modulepreload" href="./_npm/internmap@2.0.3/af036d7e.js">
+<link rel="modulepreload" href="./_npm/delaunator@5.1.0/7b06abe7.js">
+<link rel="modulepreload" href="./_npm/robust-predicates@3.0.3/b42f30a7.js">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%253D%22http%253A%252F%252Fwww.w3.org%252F2000%252Fsvg%22%20viewBox%253D%220%200%2016%2016%22%3E%3Crect%20x%253D%221%22%20y%253D%228%22%20width%253D%223.5%22%20height%253D%227%22%20rx%253D%221%22%20fill%253D%22%2523898781%22%252F%3E%3Crect%20x%253D%226.25%22%20y%253D%223%22%20width%253D%223.5%22%20height%253D%2212%22%20rx%253D%221%22%20fill%253D%22%25232a78d6%22%252F%3E%3Crect%20x%253D%2211.5%22%20y%253D%226%22%20width%253D%223.5%22%20height%253D%229%22%20rx%253D%221%22%20fill%253D%22%25232a78d6%22%252F%3E%3C%252Fsvg%3E">
+<meta name="description" content="Robust measures of US inflation (trimmed-mean and median PCE) and the range of underlying inflation supported by the best trims, updated monthly from BEA data.">
+<meta name="robots" content="noindex">
+<script type="module">
+
+import {define} from "./_observablehq/client.b5c54e4c.js";
+import {registerFile} from "./_observablehq/stdlib.c4209144.js";
+
+registerFile("./data/agreement-summary.json", {"name":"./data/agreement-summary.json","mimeType":"application/json","path":"./_file/data/agreement-summary.d784f4d2.json","lastModified":1791082378561,"size":337});
+registerFile("./data/agreement/12m.csv", {"name":"./data/agreement/12m.csv","mimeType":"text/csv","path":"./_file/data/agreement/12m.2e3afd7a.csv","lastModified":1791082377866,"size":38916});
+registerFile("./data/agreement/1m.csv", {"name":"./data/agreement/1m.csv","mimeType":"text/csv","path":"./_file/data/agreement/1m.89ac8322.csv","lastModified":1791082378306,"size":39284});
+registerFile("./data/agreement/3m.csv", {"name":"./data/agreement/3m.csv","mimeType":"text/csv","path":"./_file/data/agreement/3m.3aad4061.csv","lastModified":1791082378079,"size":39309});
+
+define({id: "b448b3e0", inputs: ["FileAttachment"], outputs: ["palette","fmt","HORIZONS","horizonText","monthsBefore","segmented","timeChart","statTile","tableView","files","summary"], body: async (FileAttachment) => {
+const [{palette, fmt, HORIZONS, horizonText, monthsBefore}, {segmented}, {timeChart, statTile, tableView}] = await Promise.all([import("./_import/components/theme.5e6de32f.js"), import("./_import/components/controls.fdb395c0.js"), import("./_import/components/charts.46f6f381.js")]);
+const files = {"12m": FileAttachment("./data/agreement/12m.csv"), "3m": FileAttachment("./data/agreement/3m.csv"), "1m": FileAttachment("./data/agreement/1m.csv")};
+const summary = FileAttachment("./data/agreement-summary.json").json();
+return {palette,fmt,HORIZONS,horizonText,monthsBefore,segmented,timeChart,statTile,tableView,files,summary};
+}});
+
+define({id: "29f0e557", inputs: ["segmented","HORIZONS","display","html","Generators"], outputs: ["horizonInput","spanInput","horizon","years"], body: (segmented,HORIZONS,display,html,Generators) => {
+const horizonInput = segmented(HORIZONS, {label: "Change over", value: "12m", key: "rrm-horizon"});
+const spanInput = segmented(new Map([["5 years", 5], ["10 years", 10], ["Since 1960", 0]]), {label: "Show", value: 10});
+display(html`<div class="controls">${horizonInput}${spanInput}</div>`);
+const horizon = Generators.input(horizonInput);
+const years = Generators.input(spanInput);
+return {horizonInput,spanInput,horizon,years};
+}});
+
+define({id: "a7c0b30a", inputs: ["files","horizon"], outputs: ["rows"], body: (files,horizon) => {
+const rows = files[horizon].csv({typed: true});
+return {rows};
+}});
+
+define({id: "564b57c4", inputs: ["palette","dark","summary","horizon","rows","years","monthsBefore"], outputs: ["c","s","last","w","pp"], body: (palette,dark,summary,horizon,rows,years,monthsBefore) => {
+const c = palette(dark);
+const s = summary.find((d) => d.horizon === horizon);
+const last = rows.at(-1).date;
+const w = rows.filter((d) => d.date >= (years ? monthsBefore(last, 12 * years) : new Date(Date.UTC(1960, 0, 1))));
+const pp = (v) => `${v.toFixed(1)} pp`;
+return {c,s,last,w,pp};
+}});
+
+define({id: "1b45bac0", mode: "inline", inputs: ["statTile","pp","s","fmt","display"], body: async (statTile,pp,s,fmt,display) => {
+display(await(
+statTile({label: "Spread now", value: pp(s.latest), delta: `Highest minus lowest measure, ${fmt.month(new Date(s.latest_date))}`})
+))
+}});
+
+define({id: "e2720bef", mode: "inline", inputs: ["statTile","pp","s","display"], body: async (statTile,pp,s,display) => {
+display(await(
+statTile({label: "Average spread", value: pp(s.average), delta: "All months since 1960"})
+))
+}});
+
+define({id: "e1c9285e", mode: "inline", inputs: ["statTile","pp","s","display"], body: async (statTile,pp,s,display) => {
+display(await(
+statTile({label: "When headline is below 2.5%", value: pp(s.low), delta: "Average spread"})
+))
+}});
+
+define({id: "19d8e06d", mode: "inline", inputs: ["statTile","pp","s","display"], body: async (statTile,pp,s,display) => {
+display(await(
+statTile({label: "When headline is 5% or more", value: pp(s.high), delta: "Average spread"})
+))
+}});
+
+define({id: "160d8d45", mode: "inline", inputs: ["horizonText","horizon","display"], body: async (horizonText,horizon,display) => {
+display(await(
+horizonText[horizon][0].toUpperCase() + horizonText[horizon].slice(1)
+))
+}});
+
+define({id: "a001fd89", mode: "inline", inputs: ["resize","timeChart","c","w","display"], body: async (resize,timeChart,c,w,display) => {
+display(await(
+resize((width) => timeChart({c, width, height: 360,
+    band: {label: "Range of core, median and trimmed mean", color: c.band, rows: w, opacity: 0.17},
+    lines: [{label: "Headline PCE", color: c.series["Headline PCE"], rows: w.map((d) => ({date: d.date, value: d.headline}))}]}))
+))
+}});
+
+define({id: "f7f7bc59", mode: "inline", inputs: ["resize","timeChart","c","w","display"], body: async (resize,timeChart,c,w,display) => {
+display(await(
+resize((width) => timeChart({c, width, height: 220, target: null, unit: " pp",
+    lines: [{label: "Spread", color: c.ink2, rows: w.map((d) => ({date: d.date, value: d.spread}))}]}))
+))
+}});
+
+define({id: "58cbbde4", mode: "inline", inputs: ["tableView","fmt","w","display"], body: async (tableView,fmt,w,display) => {
+display(await(
+tableView([
+    {label: "Month", value: (d) => fmt.ym(d.date)},
+    {label: "Lowest", num: true, value: (d) => d.lo.toFixed(2)},
+    {label: "Highest", num: true, value: (d) => d.hi.toFixed(2)},
+    {label: "Spread", num: true, value: (d) => d.spread.toFixed(2)},
+    {label: "Headline", num: true, value: (d) => d.headline?.toFixed(2) ?? "–"}
+  ], [...w].reverse())
+))
+}});
+
+</script>
+</head>
+<body>
+<input id="observablehq-sidebar-toggle" type="checkbox" title="Toggle sidebar">
+<label id="observablehq-sidebar-backdrop" for="observablehq-sidebar-toggle"></label>
+<nav id="observablehq-sidebar">
+  <ol>
+    <label id="observablehq-sidebar-close" for="observablehq-sidebar-toggle"></label>
+    <li class="observablehq-link"><a href="./">Robust Measures of Inflation</a></li>
+  </ol>
+  <ol>
+    <li class="observablehq-link"><a href="./">Overview</a></li>
+    <li class="observablehq-link"><a href="./trend-range">Underlying inflation range</a></li>
+    <li class="observablehq-link"><a href="./measures">The four measures</a></li>
+    <li class="observablehq-link"><a href="./drivers">What&#x27;s driving it</a></li>
+    <li class="observablehq-link observablehq-link-active"><a href="./agreement">Do the measures agree?</a></li>
+    <li class="observablehq-link"><a href="./robustness">Why trimmed means are robust</a></li>
+    <li class="observablehq-link"><a href="./data">Data and methods</a></li>
+  </ol>
+</nav>
+<script>{const e=document.querySelector("#observablehq-sidebar"),o=document.querySelector("#observablehq-sidebar-toggle"),r=sessionStorage.getItem("observablehq-sidebar");r?o.checked=r==="true":o.indeterminate=!0;for(const t of document.querySelectorAll("#observablehq-sidebar summary")){const s=t.parentElement;switch(sessionStorage.getItem(`observablehq-sidebar:${t.textContent}`)){case"true":s.open=!0;break;case"false":s.classList.contains("observablehq-section-active")||(s.open=!1);break}}addEventListener("beforeunload",()=>sessionStorage.setItem("observablehq-sidebar-scrolly",`${e.scrollTop}`));const a=sessionStorage.getItem("observablehq-sidebar-scrolly");a!=null&&(e.style.cssText="overflow: hidden;",e.scrollTop=+a,e.style.cssText="");}</script>
+<div id="observablehq-center">
+<header id="observablehq-header">
+<div class="vintage"><span>Data through <b>August 2026</b></span><span>Updated October 3, 2026</span></div>
+</header>
+<main id="observablehq-main" class="observablehq">
+<div class="observablehq observablehq--block"><!--:b448b3e0:--></div>
+<p class="eyebrow">Agreement</p>
+<h1 id="do-the-measures-of-underlying-inflation-agree" tabindex="-1"><a class="observablehq-header-anchor" href="#do-the-measures-of-underlying-inflation-agree">Do the measures of underlying inflation agree?</a></h1>
+<p class="lede">Core, median and trimmed-mean inflation are three answers to the same question. When they tell the same story, any of them will do. When they diverge, the choice of measure matters, and this tends to happen exactly when inflation is turning.</p>
+<div class="observablehq observablehq--block"><!--:29f0e557:--></div>
+<div class="observablehq observablehq--block"><!--:a7c0b30a:--></div>
+<div class="observablehq observablehq--block"><!--:564b57c4:--></div>
+<div class="tiles">
+  <observablehq-loading></observablehq-loading><!--:1b45bac0:-->
+  <observablehq-loading></observablehq-loading><!--:e2720bef:-->
+  <observablehq-loading></observablehq-loading><!--:e1c9285e:-->
+  <observablehq-loading></observablehq-loading><!--:19d8e06d:-->
+</div>
+<div class="card">
+  <h3>Range spanned by core, median and trimmed-mean inflation</h3>
+  <p class="sub"><observablehq-loading></observablehq-loading><!--:160d8d45:-->. The shaded band runs from the lowest to the highest of the three each month; headline is shown for context.</p>
+  <observablehq-loading></observablehq-loading><!--:a001fd89:-->
+</div>
+<div class="card">
+  <h3>How far apart they are</h3>
+  <p class="sub">Highest minus lowest of the three, in percentage points.</p>
+  <observablehq-loading></observablehq-loading><!--:f7f7bc59:-->
+  <observablehq-loading></observablehq-loading><!--:58cbbde4:-->
+</div>
+<p class="footnote">The paper's Appendix Figure B.1 shows this range for 1960–2024. The series start in early 1960 (the median and trimmed mean one month after core), so the very first month shows no spread.</p>
+</main>
+<footer id="observablehq-footer">
+<div>Ocampo, Schoenle and Smith, “Robustness of Robust Measures of Inflation,” <i>International Journal of Central Banking</i>, forthcoming. Computed from BEA's detailed PCE data; an independent research companion, not an official statistic.</div>
+</footer>
+</div>
+</body>
+</html>

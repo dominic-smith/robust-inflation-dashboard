@@ -1,34 +1,40 @@
-// Observable Framework prototype of the robust-inflation dashboard.
-// R stays the compute layer: the data loaders in src/data/*.R read the validated
-// CSVs in ../artifacts (written by compute/) at build time. The browser only
-// receives static HTML, the chart library, and each page's own data.
+// Robust Measures of Inflation: Observable Framework configuration.
+//
+// R is the compute layer: compute/ writes and validates ../artifacts, and the data
+// loaders (src/data/*.R) and the Overview page loader (src/index.md.R) read those CSVs at
+// build time. The browser receives static HTML, the chart library, and only the data
+// for what is on screen.
+import {readFileSync} from "node:fs";
+
+const vintage = JSON.parse(readFileSync(new URL("../artifacts/vintage.json", import.meta.url), "utf8"));
+const updated = new Date(vintage.refreshed_at).toLocaleDateString("en-US", {month: "long", day: "numeric", year: "numeric"});
+
+// Inline icon: no extra request (and no 404 for /favicon.ico)
+const icon = "data:image/svg+xml," + encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect x="1" y="8" width="3.5" height="7" rx="1" fill="#898781"/><rect x="6.25" y="3" width="3.5" height="12" rx="1" fill="#2a78d6"/><rect x="11.5" y="6" width="3.5" height="9" rx="1" fill="#2a78d6"/></svg>`
+);
+
 export default {
   title: "Robust Measures of Inflation",
   root: "src",
+  style: "style.css",        // our tokens on Framework's layout; system fonts only
+  globalStylesheets: [],     // drop Framework's default Google Fonts link: no third-party requests
   pages: [
-    {name: "Latest reading", path: "/"},
-    {name: "Best-trims range", path: "/best-trims-range"},
-    {name: "Measure disagreement", path: "/measure-disagreement"},
-    {name: "Distribution", path: "/distribution"},
-    {name: "Robustness", path: "/robustness"},
-    {name: "Download & methods", path: "/download"}
+    {name: "Overview", path: "/"},
+    {name: "Underlying inflation range", path: "/trend-range"},
+    {name: "The four measures", path: "/measures"},
+    {name: "What's driving it", path: "/drivers"},
+    {name: "Do the measures agree?", path: "/agreement"},
+    {name: "Why trimmed means are robust", path: "/robustness"},
+    {name: "Data and methods", path: "/data"}
   ],
-  theme: "air",
-  // The air theme's serif face (Source Serif 4, SIL OFL) is served from this site
-  // (src/fonts, copied into dist by the build script) instead of Google Fonts, so a
-  // page load makes no third-party request. Relative URLs work because every page is
-  // at the site's top level (also under a subfolder such as /proto/).
-  globalStylesheets: [],
-  // (No <link rel=preload>: Framework rewrites that href to a hashed copy, which made
-  // browsers download the font twice. font-display: swap keeps text visible meanwhile.)
-  head: `<style>
-@font-face { font-family: "Source Serif 4"; font-style: normal; font-weight: 200 900; font-display: swap;
-  src: url("./fonts/source-serif-4-latin-wght-normal.woff2") format("woff2"); }
-@font-face { font-family: "Source Serif 4"; font-style: italic; font-weight: 200 900; font-display: swap;
-  src: url("./fonts/source-serif-4-latin-wght-italic.woff2") format("woff2"); }
-</style>`,
+  head: `<link rel="icon" href="${icon}">
+<meta name="description" content="Robust measures of US inflation (trimmed-mean and median PCE) and the range of underlying inflation supported by the best trims, updated monthly from BEA data.">
+<meta name="robots" content="noindex">`,
+  header: `<div class="vintage"><span>Data through <b>${vintage.vintage_label}</b></span><span>Updated ${updated}</span></div>`,
+  footer: `Ocampo, Schoenle and Smith, “Robustness of Robust Measures of Inflation,” <i>International Journal of Central Banking</i>, forthcoming. Computed from BEA's detailed PCE data; an independent research companion, not an official statistic.`,
   toc: false,
   pager: false,
   search: false,
-  footer: "Ocampo, Schoenle & Smith, “Robustness of Robust Measures of Inflation.” Computed from BEA underlying PCE detail (current vintage)."
+  sidebar: true
 };

@@ -2,15 +2,16 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "clean": "rimraf src/.observablehq/cache",
-    "build": "rimraf src/.observablehq/cache && observable build && mkdir -p dist/fonts && cp src/fonts/* dist/fonts/",
+    "build": "rimraf src/.observablehq/cache && observable build && cp static/_headers dist/_headers",
     "dev": "observable preview",
-    "observable": "observable"
+    "test": "node test/verify.mjs",
+    "clean": "rimraf src/.observablehq/cache dist"
   },
   "dependencies": {
     "@observablehq/framework": "^1.13.0"
   },
   "devDependencies": {
-    "rimraf": "^5.0.5"
+    "rimraf": "^5.0.5",
+    "puppeteer-core": "^23.11.1"
   }
 }

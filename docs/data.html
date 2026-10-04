@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="generator" content="Observable Framework v1.13.4">
+<title>Data and methods | Robust Measures of Inflation</title>
+
+<link rel="preload" as="style" href="./_import/style.af065f40.css">
+<link rel="stylesheet" type="text/css" href="./_import/style.af065f40.css">
+<link rel="modulepreload" href="./_observablehq/client.b5c54e4c.js">
+<link rel="modulepreload" href="./_observablehq/runtime.fa9f71c0.js">
+<link rel="modulepreload" href="./_observablehq/stdlib.c4209144.js">
+<link rel="modulepreload" href="./_import/components/theme.5e6de32f.js">
+<link rel="modulepreload" href="./_import/components/controls.fdb395c0.js">
+<link rel="modulepreload" href="./_npm/htl@1.0.0/11521f02.js">
+<link rel="modulepreload" href="./_npm/d3-dsv@3.0.1/097745a2.js">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%253D%22http%253A%252F%252Fwww.w3.org%252F2000%252Fsvg%22%20viewBox%253D%220%200%2016%2016%22%3E%3Crect%20x%253D%221%22%20y%253D%228%22%20width%253D%223.5%22%20height%253D%227%22%20rx%253D%221%22%20fill%253D%22%2523898781%22%252F%3E%3Crect%20x%253D%226.25%22%20y%253D%223%22%20width%253D%223.5%22%20height%253D%2212%22%20rx%253D%221%22%20fill%253D%22%25232a78d6%22%252F%3E%3Crect%20x%253D%2211.5%22%20y%253D%226%22%20width%253D%223.5%22%20height%253D%229%22%20rx%253D%221%22%20fill%253D%22%25232a78d6%22%252F%3E%3C%252Fsvg%3E">
+<meta name="description" content="Robust measures of US inflation (trimmed-mean and median PCE) and the range of underlying inflation supported by the best trims, updated monthly from BEA data.">
+<meta name="robots" content="noindex">
+<script type="module">
+
+import {define} from "./_observablehq/client.b5c54e4c.js";
+import {registerFile} from "./_observablehq/stdlib.c4209144.js";
+
+registerFile("./data/downloads/12m.csv", {"name":"./data/downloads/12m.csv","mimeType":"text/csv","path":"./_file/data/downloads/12m.ac543e5b.csv","lastModified":1791082378805,"size":64658});
+registerFile("./data/downloads/1m.csv", {"name":"./data/downloads/1m.csv","mimeType":"text/csv","path":"./_file/data/downloads/1m.a3e966f2.csv","lastModified":1791082379224,"size":65161});
+registerFile("./data/downloads/3m.csv", {"name":"./data/downloads/3m.csv","mimeType":"text/csv","path":"./_file/data/downloads/3m.8549cf39.csv","lastModified":1791082379014,"size":65308});
+registerFile("./data/series/12m.csv", {"name":"./data/series/12m.csv","mimeType":"text/csv","path":"./_file/data/series/12m.835cd000.csv","lastModified":1791082379433,"size":116411});
+registerFile("./data/series/1m.csv", {"name":"./data/series/1m.csv","mimeType":"text/csv","path":"./_file/data/series/1m.e9e52c2f.csv","lastModified":1791082379861,"size":117831});
+registerFile("./data/series/3m.csv", {"name":"./data/series/3m.csv","mimeType":"text/csv","path":"./_file/data/series/3m.78034274.csv","lastModified":1791082379655,"size":117681});
+
+define({id: "3a2f9e92", inputs: ["FileAttachment"], outputs: ["fmt","MEASURES","HORIZONS","horizonText","segmented","downloads","files"], body: async (FileAttachment) => {
+const [{fmt, MEASURES, HORIZONS, horizonText}, {segmented}] = await Promise.all([import("./_import/components/theme.5e6de32f.js"), import("./_import/components/controls.fdb395c0.js")]);
+const downloads = {"12m": FileAttachment("./data/downloads/12m.csv"), "3m": FileAttachment("./data/downloads/3m.csv"), "1m": FileAttachment("./data/downloads/1m.csv")};
+const files = {"12m": FileAttachment("./data/series/12m.csv"), "3m": FileAttachment("./data/series/3m.csv"), "1m": FileAttachment("./data/series/1m.csv")};
+return {fmt,MEASURES,HORIZONS,horizonText,segmented,downloads,files};
+}});
+
+define({id: "9170aaea", inputs: ["segmented","HORIZONS","display","html","Generators"], outputs: ["horizonInput","horizon"], body: (segmented,HORIZONS,display,html,Generators) => {
+const horizonInput = segmented(HORIZONS, {label: "Change over", value: "12m", key: "rrm-horizon"});
+display(html`<div class="controls">${horizonInput}</div>`);
+const horizon = Generators.input(horizonInput);
+return {horizonInput,horizon};
+}});
+
+define({id: "52756ba2", inputs: ["files","horizon"], outputs: ["series"], body: (files,horizon) => {
+const series = files[horizon].csv({typed: true});
+return {series};
+}});
+
+define({id: "6f93f8da", inputs: ["series","display","html","HORIZONS","downloads","horizonText","horizon"], outputs: ["index","months"], body: (series,display,html,HORIZONS,downloads,horizonText,horizon) => {
+const index = new Map(series.map((d) => [`${d.measure}|${+d.date}`, d.value]));
+const months = [...new Set(series.map((d) => +d.date))].sort((a, b) => b - a).slice(0, 12).map((t) => new Date(t));
+display(html`<p>${[...HORIZONS].map(([label, h]) => html`<a class="download" href=${downloads[h].href} download=${`robust_inflation_${h}.csv`}>${label} CSV</a>`)}
+  <span class="muted">Monthly, 1959 to the latest month: the four measures, ${horizonText[horizon]} shown below.</span></p>`);
+return {index,months};
+}});
+
+define({id: "911f83da", mode: "inline", inputs: ["horizonText","horizon","display"], body: async (horizonText,horizon,display) => {
+display(await(
+horizonText[horizon]
+))
+}});
+
+define({id: "917fbe50", mode: "inline", inputs: ["MEASURES","html","display"], body: async (MEASURES,html,display) => {
+display(await(
+MEASURES.map((m) => html`<th class="num">${m}</th>`)
+))
+}});
+
+define({id: "b01944c5", mode: "inline", inputs: ["months","html","fmt","MEASURES","index","display"], body: async (months,html,fmt,MEASURES,index,display) => {
+display(await(
+months.map((t) => html`<tr><td>${fmt.ym(t)}</td>${MEASURES.map((m) => html`<td class="num">${index.get(`${m}|${+t}`)?.toFixed(2) ?? "–"}</td>`)}</tr>`)
+))
+}});
+
+</script>
+</head>
+<body>
+<input id="observablehq-sidebar-toggle" type="checkbox" title="Toggle sidebar">
+<label id="observablehq-sidebar-backdrop" for="observablehq-sidebar-toggle"></label>
+<nav id="observablehq-sidebar">
+  <ol>
+    <label id="observablehq-sidebar-close" for="observablehq-sidebar-toggle"></label>
+    <li class="observablehq-link"><a href="./">Robust Measures of Inflation</a></li>
+  </ol>
+  <ol>
+    <li class="observablehq-link"><a href="./">Overview</a></li>
+    <li class="observablehq-link"><a href="./trend-range">Underlying inflation range</a></li>
+    <li class="observablehq-link"><a href="./measures">The four measures</a></li>
+    <li class="observablehq-link"><a href="./drivers">What&#x27;s driving it</a></li>
+    <li class="observablehq-link"><a href="./agreement">Do the measures agree?</a></li>
+    <li class="observablehq-link"><a href="./robustness">Why trimmed means are robust</a></li>
+    <li class="observablehq-link observablehq-link-active"><a href="./data">Data and methods</a></li>
+  </ol>
+</nav>
+<script>{const e=document.querySelector("#observablehq-sidebar"),o=document.querySelector("#observablehq-sidebar-toggle"),r=sessionStorage.getItem("observablehq-sidebar");r?o.checked=r==="true":o.indeterminate=!0;for(const t of document.querySelectorAll("#observablehq-sidebar summary")){const s=t.parentElement;switch(sessionStorage.getItem(`observablehq-sidebar:${t.textContent}`)){case"true":s.open=!0;break;case"false":s.classList.contains("observablehq-section-active")||(s.open=!1);break}}addEventListener("beforeunload",()=>sessionStorage.setItem("observablehq-sidebar-scrolly",`${e.scrollTop}`));const a=sessionStorage.getItem("observablehq-sidebar-scrolly");a!=null&&(e.style.cssText="overflow: hidden;",e.scrollTop=+a,e.style.cssText="");}</script>
+<div id="observablehq-center">
+<header id="observablehq-header">
+<div class="vintage"><span>Data through <b>August 2026</b></span><span>Updated October 3, 2026</span></div>
+</header>
+<main id="observablehq-main" class="observablehq">
+<div class="observablehq observablehq--block"><!--:3a2f9e92:--></div>
+<p class="eyebrow">Data and methods</p>
+<h1 id="data-definitions-and-sources" tabindex="-1"><a class="observablehq-header-anchor" href="#data-definitions-and-sources">Data, definitions and sources</a></h1>
+<h2 id="download" tabindex="-1"><a class="observablehq-header-anchor" href="#download">Download</a></h2>
+<div class="observablehq observablehq--block"><!--:9170aaea:--></div>
+<div class="observablehq observablehq--block"><!--:52756ba2:--></div>
+<div class="observablehq observablehq--block"><!--:6f93f8da:--></div>
+<div class="card">
+  <h3>Latest 12 months: <observablehq-loading></observablehq-loading><!--:911f83da:--></h3>
+  <table>
+    <thead><tr><th>Month</th><!--:917fbe50:--></tr></thead>
+    <tbody><!--:b01944c5:--></tbody>
+  </table>
+</div>
+<h2 id="what-the-measures-are" tabindex="-1"><a class="observablehq-header-anchor" href="#what-the-measures-are">What the measures are</a></h2>
+<ul>
+<li><strong>Headline PCE inflation</strong>: the change in BEA's price index for all personal consumption expenditures.</li>
+<li><strong>Core PCE inflation</strong>: the same index excluding food and energy.</li>
+<li><strong>Median PCE inflation</strong>: each month, the roughly 180 detailed spending categories are sorted by their price change and weighted by their share of spending; the median is the change at the middle of that distribution. This follows the Cleveland Fed's approach.</li>
+<li><strong>Trimmed-mean PCE inflation</strong>: the same sorted distribution with the lowest-changing 24% and highest-changing 31% of spending set aside, and the rest averaged. This follows the Dallas Fed's definition.</li>
+<li><strong>Best-trims range</strong>: the paper evaluates all 2,601 combinations of how much to trim from each end (0–50% from each). For each measure of trend inflation it identifies the set of trims whose forecast errors are statistically indistinguishable from the best trim's (Diebold–Mariano test, 5% level). The range is the lowest to highest 12-month rate across that set; its average is the "best-trims average".</li>
+<li><strong>Horizons</strong>: the 12-month change compares a month with the same month a year earlier. The 3- and 1-month changes are expressed at annual rates; they react sooner but are noisier.</li>
+</ul>
+<h2 id="sources-and-computation" tabindex="-1"><a class="observablehq-header-anchor" href="#sources-and-computation">Sources and computation</a></h2>
+<ul>
+<li>Price indexes and spending come from BEA's underlying detail tables for personal consumption expenditures (Tables 2.4.4U and 2.4.5U), downloaded each month. The latest release is used in full, so earlier months reflect BEA's revisions, including its annual updates.</li>
+<li>Headline and core inflation are BEA's published aggregates, checked against FRED each month. The median and trimmed mean are computed by the authors from the detailed categories. They follow the Federal Reserve Banks' published definitions but are not the official series, and differ from them slightly.</li>
+<li>Each measure is dated to the month of the price change it measures.</li>
+<li>Which trims make up each best-trims set, and the robustness results, come from the paper's evaluation and are fixed at its data vintage. The trims themselves are recomputed on every new data release.</li>
+</ul>
+<h2 id="reference" tabindex="-1"><a class="observablehq-header-anchor" href="#reference">Reference</a></h2>
+<p>Ocampo, Schoenle and Smith, “Robustness of Robust Measures of Inflation,” <em>International Journal of Central Banking</em>, forthcoming.</p>
+<p class="footnote">This site is an independent research companion to the paper. It is not an official statistic, and it does not represent the views of the Bureau of Labor Statistics, the Federal Reserve System, or any other institution.</p>
+<style>
+a.download { display: inline-block; margin: 0 0.5rem 0.5rem 0; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--ring); background: var(--surface); text-decoration: none; font-weight: 600; font-size: 13.5px; }
+a.download:hover { border-color: var(--accent); }
+</style>
+</main>
+<footer id="observablehq-footer">
+<div>Ocampo, Schoenle and Smith, “Robustness of Robust Measures of Inflation,” <i>International Journal of Central Banking</i>, forthcoming. Computed from BEA's detailed PCE data; an independent research companion, not an official statistic.</div>
+</footer>
+</div>
+</body>
+</html>

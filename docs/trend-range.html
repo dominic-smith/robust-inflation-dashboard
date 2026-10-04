@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="generator" content="Observable Framework v1.13.4">
+<title>Underlying inflation range | Robust Measures of Inflation</title>
+
+<link rel="preload" as="style" href="./_import/style.af065f40.css">
+<link rel="stylesheet" type="text/css" href="./_import/style.af065f40.css">
+<link rel="modulepreload" href="./_observablehq/client.b5c54e4c.js">
+<link rel="modulepreload" href="./_observablehq/runtime.fa9f71c0.js">
+<link rel="modulepreload" href="./_observablehq/stdlib.c4209144.js">
+<link rel="modulepreload" href="./_import/components/theme.5e6de32f.js">
+<link rel="modulepreload" href="./_import/components/controls.fdb395c0.js">
+<link rel="modulepreload" href="./_import/components/charts.46f6f381.js">
+<link rel="modulepreload" href="./_npm/htl@1.0.0/11521f02.js">
+<link rel="modulepreload" href="./_npm/@observablehq/plot@0.6.17/93ce672e.js">
+<link rel="modulepreload" href="./_npm/d3@7.9.0/080cf928.js">
+<link rel="modulepreload" href="./_npm/d3-dsv@3.0.1/097745a2.js">
+<link rel="modulepreload" href="./_npm/isoformat@0.2.1/604cb63b.js">
+<link rel="modulepreload" href="./_npm/interval-tree-1d@1.0.4/f53f17b2.js">
+<link rel="modulepreload" href="./_npm/d3-array@3.2.4/b8e751b6.js">
+<link rel="modulepreload" href="./_npm/d3-axis@3.0.0/c662ea05.js">
+<link rel="modulepreload" href="./_npm/d3-brush@3.0.0/d162d8c6.js">
+<link rel="modulepreload" href="./_npm/d3-chord@3.0.1/5cedd0be.js">
+<link rel="modulepreload" href="./_npm/d3-color@3.1.0/65d51007.js">
+<link rel="modulepreload" href="./_npm/d3-contour@4.0.2/c576a91a.js">
+<link rel="modulepreload" href="./_npm/d3-delaunay@6.0.4/8b43826d.js">
+<link rel="modulepreload" href="./_npm/d3-dispatch@3.0.1/3fb06f14.js">
+<link rel="modulepreload" href="./_npm/d3-drag@3.0.0/20b76948.js">
+<link rel="modulepreload" href="./_npm/d3-ease@3.0.1/8683b012.js">
+<link rel="modulepreload" href="./_npm/d3-fetch@3.0.1/5c319046.js">
+<link rel="modulepreload" href="./_npm/d3-force@3.0.0/33924f3e.js">
+<link rel="modulepreload" href="./_npm/d3-format@3.1.2/8d67a1ae.js">
+<link rel="modulepreload" href="./_npm/d3-geo@3.1.1/8037bd0b.js">
+<link rel="modulepreload" href="./_npm/d3-hierarchy@3.1.2/a9ba0229.js">
+<link rel="modulepreload" href="./_npm/d3-interpolate@3.0.1/e0a47f97.js">
+<link rel="modulepreload" href="./_npm/d3-path@3.1.0/f9e9e0ab.js">
+<link rel="modulepreload" href="./_npm/d3-polygon@3.0.1/2da8eb3b.js">
+<link rel="modulepreload" href="./_npm/d3-quadtree@3.0.1/09002e01.js">
+<link rel="modulepreload" href="./_npm/d3-random@3.0.1/5108797c.js">
+<link rel="modulepreload" href="./_npm/d3-scale@4.0.2/c9f2571b.js">
+<link rel="modulepreload" href="./_npm/d3-scale-chromatic@3.1.0/f3c78e0d.js">
+<link rel="modulepreload" href="./_npm/d3-selection@3.0.0/28717d05.js">
+<link rel="modulepreload" href="./_npm/d3-shape@3.2.0/7c6e2a50.js">
+<link rel="modulepreload" href="./_npm/d3-time@3.1.0/3d1d57c6.js">
+<link rel="modulepreload" href="./_npm/d3-time-format@4.1.0/643581a8.js">
+<link rel="modulepreload" href="./_npm/d3-timer@3.0.1/e99232db.js">
+<link rel="modulepreload" href="./_npm/d3-transition@3.0.1/bd07fd9a.js">
+<link rel="modulepreload" href="./_npm/d3-zoom@3.0.0/d09f7cc9.js">
+<link rel="modulepreload" href="./_npm/binary-search-bounds@2.0.5/5f640032.js">
+<link rel="modulepreload" href="./_npm/internmap@2.0.3/af036d7e.js">
+<link rel="modulepreload" href="./_npm/delaunator@5.1.0/7b06abe7.js">
+<link rel="modulepreload" href="./_npm/robust-predicates@3.0.3/b42f30a7.js">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%253D%22http%253A%252F%252Fwww.w3.org%252F2000%252Fsvg%22%20viewBox%253D%220%200%2016%2016%22%3E%3Crect%20x%253D%221%22%20y%253D%228%22%20width%253D%223.5%22%20height%253D%227%22%20rx%253D%221%22%20fill%253D%22%2523898781%22%252F%3E%3Crect%20x%253D%226.25%22%20y%253D%223%22%20width%253D%223.5%22%20height%253D%2212%22%20rx%253D%221%22%20fill%253D%22%25232a78d6%22%252F%3E%3Crect%20x%253D%2211.5%22%20y%253D%226%22%20width%253D%223.5%22%20height%253D%229%22%20rx%253D%221%22%20fill%253D%22%25232a78d6%22%252F%3E%3C%252Fsvg%3E">
+<meta name="description" content="Robust measures of US inflation (trimmed-mean and median PCE) and the range of underlying inflation supported by the best trims, updated monthly from BEA data.">
+<meta name="robots" content="noindex">
+<script type="module">
+
+import {define} from "./_observablehq/client.b5c54e4c.js";
+import {registerFile} from "./_observablehq/stdlib.c4209144.js";
+
+registerFile("./data/band-meta.json", {"name":"./data/band-meta.json","mimeType":"application/json","path":"./_file/data/band-meta.48fea29f.json","lastModified":1791082385568,"size":592});
+registerFile("./data/band/b_2_39-00s.csv", {"name":"./data/band/b_2_39-00s.csv","mimeType":"text/csv","path":"./_file/data/band/b_2_39-00s.3148f9a6.csv","lastModified":1791082385343,"size":31783});
+registerFile("./data/band/b_2_39-80s.csv", {"name":"./data/band/b_2_39-80s.csv","mimeType":"text/csv","path":"./_file/data/band/b_2_39-80s.b47cdaaf.csv","lastModified":1791082385123,"size":31786});
+registerFile("./data/band/b_2_39-long.csv", {"name":"./data/band/b_2_39-long.csv","mimeType":"text/csv","path":"./_file/data/band/b_2_39-long.9492ef43.csv","lastModified":1791082384904,"size":31787});
+registerFile("./data/band/c_0_37-00s.csv", {"name":"./data/band/c_0_37-00s.csv","mimeType":"text/csv","path":"./_file/data/band/c_0_37-00s.230a15d6.csv","lastModified":1791082383364,"size":31783});
+registerFile("./data/band/c_0_37-80s.csv", {"name":"./data/band/c_0_37-80s.csv","mimeType":"text/csv","path":"./_file/data/band/c_0_37-80s.7fa8a272.csv","lastModified":1791082383142,"size":31764});
+registerFile("./data/band/c_0_37-long.csv", {"name":"./data/band/c_0_37-long.csv","mimeType":"text/csv","path":"./_file/data/band/c_0_37-long.064b5453.csv","lastModified":1791082382917,"size":31774});
+registerFile("./data/band/f_0_24-00s.csv", {"name":"./data/band/f_0_24-00s.csv","mimeType":"text/csv","path":"./_file/data/band/f_0_24-00s.db1291c0.csv","lastModified":1791082384686,"size":31783});
+registerFile("./data/band/f_0_24-80s.csv", {"name":"./data/band/f_0_24-80s.csv","mimeType":"text/csv","path":"./_file/data/band/f_0_24-80s.706c14a7.csv","lastModified":1791082384465,"size":31825});
+registerFile("./data/band/f_0_24-long.csv", {"name":"./data/band/f_0_24-long.csv","mimeType":"text/csv","path":"./_file/data/band/f_0_24-long.6d463ba4.csv","lastModified":1791082384243,"size":31734});
+registerFile("./data/band/f_12_24-00s.csv", {"name":"./data/band/f_12_24-00s.csv","mimeType":"text/csv","path":"./_file/data/band/f_12_24-00s.7965e8de.csv","lastModified":1791082384026,"size":31792});
+registerFile("./data/band/f_12_24-80s.csv", {"name":"./data/band/f_12_24-80s.csv","mimeType":"text/csv","path":"./_file/data/band/f_12_24-80s.4cf35b78.csv","lastModified":1791082383804,"size":31818});
+registerFile("./data/band/f_12_24-long.csv", {"name":"./data/band/f_12_24-long.csv","mimeType":"text/csv","path":"./_file/data/band/f_12_24-long.9df76fb6.csv","lastModified":1791082383581,"size":31786});
+registerFile("./data/series/12m.csv", {"name":"./data/series/12m.csv","mimeType":"text/csv","path":"./_file/data/series/12m.835cd000.csv","lastModified":1791082379433,"size":116411});
+
+define({id: "698acc5c", inputs: ["FileAttachment"], outputs: ["palette","fmt","TARGETS","TARGET_NOTE","SAMPLES","monthsBefore","segmented","timeChart","statTile","tableView","deltaText","bands","meta","series"], body: async (FileAttachment) => {
+const [{palette, fmt, TARGETS, TARGET_NOTE, SAMPLES, monthsBefore}, {segmented}, {timeChart, statTile, tableView, deltaText}] = await Promise.all([import("./_import/components/theme.5e6de32f.js"), import("./_import/components/controls.fdb395c0.js"), import("./_import/components/charts.46f6f381.js")]);
+// one small file per trend measure x sample; only the selected one is fetched
+const bands = {
+  "c_0_37-long": FileAttachment("./data/band/c_0_37-long.csv"), "c_0_37-80s": FileAttachment("./data/band/c_0_37-80s.csv"), "c_0_37-00s": FileAttachment("./data/band/c_0_37-00s.csv"),
+  "f_12_24-long": FileAttachment("./data/band/f_12_24-long.csv"), "f_12_24-80s": FileAttachment("./data/band/f_12_24-80s.csv"), "f_12_24-00s": FileAttachment("./data/band/f_12_24-00s.csv"),
+  "f_0_24-long": FileAttachment("./data/band/f_0_24-long.csv"), "f_0_24-80s": FileAttachment("./data/band/f_0_24-80s.csv"), "f_0_24-00s": FileAttachment("./data/band/f_0_24-00s.csv"),
+  "b_2_39-long": FileAttachment("./data/band/b_2_39-long.csv"), "b_2_39-80s": FileAttachment("./data/band/b_2_39-80s.csv"), "b_2_39-00s": FileAttachment("./data/band/b_2_39-00s.csv")
+};
+const meta = FileAttachment("./data/band-meta.json").json();
+const series = FileAttachment("./data/series/12m.csv").csv({typed: true});
+return {palette,fmt,TARGETS,TARGET_NOTE,SAMPLES,monthsBefore,segmented,timeChart,statTile,tableView,deltaText,bands,meta,series};
+}});
+
+define({id: "38e74b3c", inputs: ["segmented","TARGETS","SAMPLES","display","html","Generators"], outputs: ["targetInput","sampleInput","spanInput","target","sample","span"], body: (segmented,TARGETS,SAMPLES,display,html,Generators) => {
+const targetInput = segmented(TARGETS, {label: "Trend measure", value: "c_0_37"});
+const sampleInput = segmented(SAMPLES, {label: "Trims chosen on", value: "long"});
+const spanInput = segmented(new Map([["Since 2020", "2020"], ["10 years", "10"], ["All", "0"]]), {label: "Show", value: "2020"});
+display(html`<div class="controls">${targetInput}${sampleInput}${spanInput}</div>`);
+const target = Generators.input(targetInput);
+const sample = Generators.input(sampleInput);
+const span = Generators.input(spanInput);
+return {targetInput,sampleInput,spanInput,target,sample,span};
+}});
+
+define({id: "1303fa8a", inputs: ["bands","target","sample"], outputs: ["band"], body: (bands,target,sample) => {
+const band = bands[`${target}-${sample}`].csv({typed: true});
+return {band};
+}});
+
+define({id: "d1973eea", inputs: ["palette","dark","band","monthsBefore","meta","target","sample","span","series"], outputs: ["c","last","then","bThen","n","start","bw","pick","index","at"], body: (palette,dark,band,monthsBefore,meta,target,sample,span,series) => {
+const c = palette(dark);
+const last = band.at(-1);
+const then = monthsBefore(last.date, 3);
+const bThen = band.find((d) => +d.date === +then);
+const n = meta.find((m) => m.target === target && m.sample === sample).n_trims;
+const start = span === "2020" ? new Date(Date.UTC(2020, 0, 1)) : span === "10" ? monthsBefore(last.date, 120) : band[0].date;
+const bw = band.filter((d) => d.date >= start);
+const pick = (m) => series.filter((d) => d.measure === m && d.date >= start && d.date <= last.date).map(({date, value}) => ({date, value}));
+const index = new Map(series.map((d) => [`${d.measure}|${+d.date}`, d.value]));  // O(1) lookups for tiles and tables
+const at = (m, date) => index.get(`${m}|${+date}`);
+return {c,last,then,bThen,n,start,bw,pick,index,at};
+}});
+
+define({id: "f979b531", mode: "inline", inputs: ["statTile","last","fmt","display"], body: async (statTile,last,fmt,display) => {
+display(await(
+statTile({label: "Range of the best trims", value: `${last.lo.toFixed(1)}–${last.hi.toFixed(1)}%`, delta: `12-month change, ${fmt.month(last.date)}`})
+))
+}});
+
+define({id: "6c712468", mode: "inline", inputs: ["statTile","fmt","last","deltaText","bThen","then","display"], body: async (statTile,fmt,last,deltaText,bThen,then,display) => {
+display(await(
+statTile({label: "Best-trims average", keyClass: "k-band", value: fmt.pct(last.mean), delta: deltaText(last.mean, bThen?.mean, fmt.monthShort(then))})
+))
+}});
+
+define({id: "1ceba0e8", mode: "inline", inputs: ["statTile","fmt","at","last","deltaText","then","display"], body: async (statTile,fmt,at,last,deltaText,then,display) => {
+display(await(
+statTile({label: "Trimmed-mean PCE", keyClass: "k-tm", value: fmt.pct(at("Trimmed-mean PCE", last.date)), delta: deltaText(at("Trimmed-mean PCE", last.date), at("Trimmed-mean PCE", then), fmt.monthShort(then))})
+))
+}});
+
+define({id: "77adf1b1", mode: "inline", inputs: ["statTile","n","display"], body: async (statTile,n,display) => {
+display(await(
+statTile({label: "Trims in the set", value: String(n), delta: "of 2,601 candidate trims"})
+))
+}});
+
+define({id: "808fce16", mode: "inline", inputs: ["TARGET_NOTE","target","display"], body: async (TARGET_NOTE,target,display) => {
+display(await(
+TARGET_NOTE[target]
+))
+}});
+
+define({id: "47498381", mode: "inline", inputs: ["SAMPLES","sample","display"], body: async (SAMPLES,sample,display) => {
+display(await(
+[...SAMPLES].find(([, v]) => v === sample)[0]
+))
+}});
+
+define({id: "a6ea12aa", mode: "inline", inputs: ["resize","timeChart","c","bw","pick","display"], body: async (resize,timeChart,c,bw,pick,display) => {
+display(await(
+resize((width) => timeChart({c, width, height: 380,
+    band: {label: "Range of best trims", color: c.band, rows: bw, opacity: 0.17},
+    lines: [
+      {label: "Best-trims average", color: c.ink, rows: bw.map((d) => ({date: d.date, value: d.mean}))},
+      {label: "Trimmed-mean PCE", color: c.series["Trimmed-mean PCE"], rows: pick("Trimmed-mean PCE")},
+      {label: "Median PCE", color: c.series["Median PCE"], rows: pick("Median PCE")},
+      {label: "Headline PCE", color: c.series["Headline PCE"], rows: pick("Headline PCE")}
+    ]}))
+))
+}});
+
+define({id: "a317d280", mode: "inline", inputs: ["tableView","fmt","at","bw","display"], body: async (tableView,fmt,at,bw,display) => {
+display(await(
+tableView([
+    {label: "Month", value: (d) => fmt.ym(d.date)},
+    {label: "Low", num: true, value: (d) => d.lo.toFixed(2)},
+    {label: "High", num: true, value: (d) => d.hi.toFixed(2)},
+    {label: "Average", num: true, value: (d) => d.mean.toFixed(2)},
+    {label: "Trimmed mean", num: true, value: (d) => at("Trimmed-mean PCE", d.date)?.toFixed(2) ?? "–"},
+    {label: "Median", num: true, value: (d) => at("Median PCE", d.date)?.toFixed(2) ?? "–"},
+    {label: "Headline", num: true, value: (d) => at("Headline PCE", d.date)?.toFixed(2) ?? "–"}
+  ], [...bw].reverse())
+))
+}});
+
+</script>
+</head>
+<body>
+<input id="observablehq-sidebar-toggle" type="checkbox" title="Toggle sidebar">
+<label id="observablehq-sidebar-backdrop" for="observablehq-sidebar-toggle"></label>
+<nav id="observablehq-sidebar">
+  <ol>
+    <label id="observablehq-sidebar-close" for="observablehq-sidebar-toggle"></label>
+    <li class="observablehq-link"><a href="./">Robust Measures of Inflation</a></li>
+  </ol>
+  <ol>
+    <li class="observablehq-link"><a href="./">Overview</a></li>
+    <li class="observablehq-link observablehq-link-active"><a href="./trend-range">Underlying inflation range</a></li>
+    <li class="observablehq-link"><a href="./measures">The four measures</a></li>
+    <li class="observablehq-link"><a href="./drivers">What&#x27;s driving it</a></li>
+    <li class="observablehq-link"><a href="./agreement">Do the measures agree?</a></li>
+    <li class="observablehq-link"><a href="./robustness">Why trimmed means are robust</a></li>
+    <li class="observablehq-link"><a href="./data">Data and methods</a></li>
+  </ol>
+</nav>
+<script>{const e=document.querySelector("#observablehq-sidebar"),o=document.querySelector("#observablehq-sidebar-toggle"),r=sessionStorage.getItem("observablehq-sidebar");r?o.checked=r==="true":o.indeterminate=!0;for(const t of document.querySelectorAll("#observablehq-sidebar summary")){const s=t.parentElement;switch(sessionStorage.getItem(`observablehq-sidebar:${t.textContent}`)){case"true":s.open=!0;break;case"false":s.classList.contains("observablehq-section-active")||(s.open=!1);break}}addEventListener("beforeunload",()=>sessionStorage.setItem("observablehq-sidebar-scrolly",`${e.scrollTop}`));const a=sessionStorage.getItem("observablehq-sidebar-scrolly");a!=null&&(e.style.cssText="overflow: hidden;",e.scrollTop=+a,e.style.cssText="");}</script>
+<div id="observablehq-center">
+<header id="observablehq-header">
+<div class="vintage"><span>Data through <b>August 2026</b></span><span>Updated October 3, 2026</span></div>
+</header>
+<main id="observablehq-main" class="observablehq">
+<div class="observablehq observablehq--block"><!--:698acc5c:--></div>
+<p class="eyebrow">Underlying inflation</p>
+<h1 id="what-range-of-underlying-inflation-do-the-best-trims-support" tabindex="-1"><a class="observablehq-header-anchor" href="#what-range-of-underlying-inflation-do-the-best-trims-support">What range of underlying inflation do the best trims support?</a></h1>
+<p class="lede">A trimmed mean drops a share of the most extreme price changes each month. The paper evaluates all 2,601 combinations of how much to trim from each end, and finds that many track trend inflation about equally well: their errors cannot be statistically distinguished from the best trim's (Diebold–Mariano test, 5% level). The band below is the range of 12-month inflation those trims produce each month. It is the paper's Figure 1, recomputed on the latest data.</p>
+<div class="observablehq observablehq--block"><!--:38e74b3c:--></div>
+<div class="observablehq observablehq--block"><!--:1303fa8a:--></div>
+<div class="observablehq observablehq--block"><!--:d1973eea:--></div>
+<div class="tiles">
+  <observablehq-loading></observablehq-loading><!--:f979b531:-->
+  <observablehq-loading></observablehq-loading><!--:6c712468:-->
+  <observablehq-loading></observablehq-loading><!--:1ceba0e8:-->
+  <observablehq-loading></observablehq-loading><!--:77adf1b1:-->
+</div>
+<div class="card">
+  <h3>Range of the best trims, with the main measures</h3>
+  <p class="sub">12-month change. Trims chosen to track <observablehq-loading></observablehq-loading><!--:808fce16:-->, evaluated over <observablehq-loading></observablehq-loading><!--:47498381:-->.</p>
+  <observablehq-loading></observablehq-loading><!--:a6ea12aa:-->
+  <observablehq-loading></observablehq-loading><!--:a317d280:-->
+</div>
+<h2 id="reading-the-range" tabindex="-1"><a class="observablehq-header-anchor" href="#reading-the-range">Reading the range</a></h2>
+<ul>
+<li><strong>A narrow band</strong> means the choice of trim barely matters: the data pin down underlying inflation tightly. <strong>A wide band</strong> is a warning that any single trimmed mean is less precise than it looks.</li>
+<li><strong>The trend measure</strong> is the yardstick the trims were scored against. <em>Current trend</em> is a centered average of headline inflation; <em>future</em> and <em>forward trend</em> look ahead, so the trims chosen for them are the ones that best predict where inflation is going.</li>
+<li><strong>The sample</strong> is the period over which trims were scored. Sets chosen on 1970–1989 reflect a high-inflation era; 2000–2024 reflects the low-inflation period.</li>
+<li>Which trims belong to each set is fixed by the paper's evaluation; each month every trim in the set is recomputed on the latest BEA data. The official trimmed mean (24% off the bottom, 31% off the top) is inside the set for the future trend but just outside it for the current trend.</li>
+</ul>
+</main>
+<footer id="observablehq-footer">
+<div>Ocampo, Schoenle and Smith, “Robustness of Robust Measures of Inflation,” <i>International Journal of Central Banking</i>, forthcoming. Computed from BEA's detailed PCE data; an independent research companion, not an official statistic.</div>
+</footer>
+</div>
+</body>
+</html>
